@@ -69,7 +69,7 @@ public class GameHUD {
     private void createFaceHUD(Face face) {
         // Autoplay indicator (top center) - only if autoplay is enabled
         if (settings.isAutoPlay()) {
-            TextDisplay autoPlayDisplay = createHUDText(face, 0, TOP_Y + 1.5, "§a自动播放");
+            TextDisplay autoPlayDisplay = createHUDText(face, 0, TOP_Y, "§a自动播放");
             hudEntities.add(autoPlayDisplay);
         } else {
             // Add null placeholder to maintain index consistency

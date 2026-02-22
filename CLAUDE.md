@@ -471,7 +471,7 @@ The editor includes a real-time preview system that shows where notes will be pl
 
 HOLD notes use BPM-aware length calculation:
 ```java
-float scaleZ = (float) ((60.0 / bpm) * speed)
+float scaleZ = (float) ((60.0 / bpm) * speed);
 ```
 
 This ensures:
@@ -808,7 +808,7 @@ AsyncChartLoader.preloadChartsAsync(chartFiles, chart -> {
 Use PlanetLib's scheduler, not Bukkit's:
 ```java
 PlanetLib.getScheduler().runTimer(task, delay, period);
-PlanetLib.getScheduler().runDelayed(task, delay);
+PlanetLib.getScheduler().runLater(task, delay);
 ```
 
 ### Logging
