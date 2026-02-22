@@ -1,0 +1,17 @@
+{
+  "permissions": {
+    "allow": [
+      "mcp__ide__getDiagnostics",
+      "Bash(mvn compile:*)",
+      "Bash(python:*)",
+      "Bash(mvn clean package:*)",
+      "Bash(where:*)",
+      "Bash(cmd /c where:*)",
+      "Bash(cmd /c:*)",
+      "Bash(dir:*)",
+      "Bash(javap:*)",
+      "Bash(ls:*)",
+      "Bash(grep:*)"
+    ]
+  }
+}

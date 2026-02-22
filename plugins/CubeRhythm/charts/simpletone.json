@@ -1,0 +1,621 @@
+{
+  "version": "1.0.0",
+  "metadata": {
+    "id": "simpletone",
+    "title": "simpletone",
+    "artist": "CRE",
+    "charter": "PiraTom",
+    "difficulty": {
+      "name": "Tutorial",
+      "level": 1,
+      "color": "AQUA"
+    },
+    "audio": "cr.simpletone",
+    "duration": 51,
+    "offset": 0,
+    "bpm": 130
+  },
+  "notes": [
+    {
+      "type": "execution",
+      "time": 0.5,
+      "actions": [
+        {
+          "type": "title",
+          "enabled": true,
+          "title": "§7欢迎来到 §fCube Rhythm",
+          "subtitle": "§f §f",
+          "fadeIn": 10,
+          "stay": 20,
+          "fadeOut": 10
+        }
+      ]
+    },
+    {
+      "type": "execution",
+      "time": 2.5,
+      "actions": [
+        {
+          "type": "title",
+          "enabled": true,
+          "title": "§7下面将进行§f玩法教学",
+          "subtitle": "§f §f",
+          "fadeIn": 10,
+          "stay": 20,
+          "fadeOut": 10
+        }
+      ]
+    },
+    {
+      "type": "execution",
+      "time": 4.5,
+      "actions": [
+        {
+          "type": "title",
+          "enabled": true,
+          "title": "§7我们先从§f最基础的东西§7开始",
+          "subtitle": "§f §f",
+          "fadeIn": 10,
+          "stay": 20,
+          "fadeOut": 10
+        }
+      ]
+    },
+    {
+      "type": "tap",
+      "time": 14.77,
+      "face": "w",
+      "position": {"x": 1, "y": 0},
+      "glowing": false,
+      "tag": ""
+    },
+    {
+      "type": "tap",
+      "time": 16.61,
+      "face": "w",
+      "position": {"x": 1, "y": 1},
+      "glowing": false,
+      "tag": ""
+    },
+    {
+      "type": "tap",
+      "time": 18.46,
+      "face": "w",
+      "position": {"x": 1, "y": -1},
+      "glowing": false,
+      "tag": ""
+    },
+    {
+      "type": "tap",
+      "time": 20.31,
+      "face": "w",
+      "position": {"x": 1, "y": 0},
+      "glowing": false,
+      "tag": ""
+    },
+    {
+      "type": "double",
+      "time": 22.15,
+      "face": "w",
+      "positions": [
+        {"x": -1, "y": -1},
+        {"x": -2, "y": 1}
+      ],
+      "glowing": false,
+      "tag": ""
+    },
+    {
+      "type": "double",
+      "time": 24.0,
+      "face": "w",
+      "positions": [
+        {"x": -1, "y": 1},
+        {"x": -2, "y": -1}
+      ],
+      "glowing": false,
+      "tag": ""
+    },
+    {
+      "type": "double",
+      "time": 25.84,
+      "face": "w",
+      "positions": [
+        {"x": 1, "y": 2},
+        {"x": -2, "y": -1}
+      ],
+      "glowing": false,
+      "tag": ""
+    },
+    {
+      "type": "double",
+      "time": 27.69,
+      "face": "w",
+      "positions": [
+        {"x": 1, "y": -1},
+        {"x": -1, "y": 2}
+      ],
+      "glowing": false,
+      "tag": ""
+    },
+    {
+      "type": "tap",
+      "time": 29.54,
+      "face": "w",
+      "position": {"x": 2, "y": 1},
+      "glowing": false,
+      "tag": ""
+    },
+    {
+      "type": "hold",
+      "time": 29.55,
+      "face": "w",
+      "position": {"x": 2, "y": 1},
+      "glowing": false,
+      "tag": ""
+    },
+    {
+      "type": "hold",
+      "time": 29.64,
+      "face": "w",
+      "position": {"x": 2, "y": 1},
+      "glowing": false,
+      "tag": ""
+    },
+    {
+      "type": "hold",
+      "time": 29.74,
+      "face": "w",
+      "position": {"x": 2, "y": 1},
+      "glowing": false,
+      "tag": ""
+    },
+    {
+      "type": "hold",
+      "time": 29.84,
+      "face": "w",
+      "position": {"x": 2, "y": 1},
+      "glowing": false,
+      "tag": ""
+    },
+    {
+      "type": "hold",
+      "time": 29.94,
+      "face": "w",
+      "position": {"x": 2, "y": 1},
+      "glowing": false,
+      "tag": ""
+    },
+    {
+      "type": "hold",
+      "time": 30.04,
+      "face": "w",
+      "position": {"x": 2, "y": 1},
+      "glowing": false,
+      "tag": ""
+    },
+    {
+      "type": "hold",
+      "time": 30.14,
+      "face": "w",
+      "position": {"x": 2, "y": 1},
+      "glowing": false,
+      "tag": ""
+    },
+    {
+      "type": "hold",
+      "time": 30.24,
+      "face": "w",
+      "position": {"x": 2, "y": 1},
+      "glowing": false,
+      "tag": ""
+    },
+    {
+      "type": "hold",
+      "time": 30.34,
+      "face": "w",
+      "position": {"x": 2, "y": 1},
+      "glowing": false,
+      "tag": ""
+    },
+    {
+      "type": "hold",
+      "time": 30.44,
+      "face": "w",
+      "position": {"x": 2, "y": 1},
+      "glowing": false,
+      "tag": ""
+    },
+    {
+      "type": "hold",
+      "time": 30.54,
+      "face": "w",
+      "position": {"x": 2, "y": 1},
+      "glowing": false,
+      "tag": ""
+    },
+    {
+      "type": "hold",
+      "time": 30.64,
+      "face": "w",
+      "position": {"x": 2, "y": 1},
+      "glowing": false,
+      "tag": ""
+    },
+    {
+      "type": "hold",
+      "time": 30.74,
+      "face": "w",
+      "position": {"x": 2, "y": 1},
+      "glowing": false,
+      "tag": ""
+    },
+    {
+      "type": "hold",
+      "time": 30.84,
+      "face": "w",
+      "position": {"x": 2, "y": 1},
+      "glowing": false,
+      "tag": ""
+    },
+    {
+      "type": "tap",
+      "time": 31.38,
+      "face": "w",
+      "position": {"x": 1, "y": 0},
+      "glowing": false,
+      "tag": ""
+    },
+    {
+      "type": "hold",
+      "time": 31.39,
+      "face": "w",
+      "position": {"x": 1, "y": 0},
+      "glowing": false,
+      "tag": ""
+    },
+    {
+      "type": "hold",
+      "time": 31.48,
+      "face": "w",
+      "position": {"x": 1, "y": 0},
+      "glowing": false,
+      "tag": ""
+    },
+    {
+      "type": "hold",
+      "time": 31.58,
+      "face": "w",
+      "position": {"x": 1, "y": 0},
+      "glowing": false,
+      "tag": ""
+    },
+    {
+      "type": "hold",
+      "time": 31.68,
+      "face": "w",
+      "position": {"x": 1, "y": 0},
+      "glowing": false,
+      "tag": ""
+    },
+    {
+      "type": "hold",
+      "time": 31.78,
+      "face": "w",
+      "position": {"x": 1, "y": 0},
+      "glowing": false,
+      "tag": ""
+    },
+    {
+      "type": "hold",
+      "time": 31.88,
+      "face": "w",
+      "position": {"x": 1, "y": 0},
+      "glowing": false,
+      "tag": ""
+    },
+    {
+      "type": "hold",
+      "time": 31.98,
+      "face": "w",
+      "position": {"x": 1, "y": 0},
+      "glowing": false,
+      "tag": ""
+    },
+    {
+      "type": "hold",
+      "time": 32.08,
+      "face": "w",
+      "position": {"x": 1, "y": 0},
+      "glowing": false,
+      "tag": ""
+    },
+    {
+      "type": "hold",
+      "time": 32.18,
+      "face": "w",
+      "position": {"x": 1, "y": 0},
+      "glowing": false,
+      "tag": ""
+    },
+    {
+      "type": "hold",
+      "time": 32.28,
+      "face": "w",
+      "position": {"x": 1, "y": 0},
+      "glowing": false,
+      "tag": ""
+    },
+    {
+      "type": "hold",
+      "time": 32.38,
+      "face": "w",
+      "position": {"x": 1, "y": 0},
+      "glowing": false,
+      "tag": ""
+    },
+    {
+      "type": "hold",
+      "time": 32.48,
+      "face": "w",
+      "position": {"x": 1, "y": 0},
+      "glowing": false,
+      "tag": ""
+    },
+    {
+      "type": "hold",
+      "time": 32.58,
+      "face": "w",
+      "position": {"x": 1, "y": 0},
+      "glowing": false,
+      "tag": ""
+    },
+    {
+      "type": "hold",
+      "time": 32.68,
+      "face": "w",
+      "position": {"x": 1, "y": 0},
+      "glowing": false,
+      "tag": ""
+    },
+    {
+      "type": "tap",
+      "time": 33.23,
+      "face": "w",
+      "position": {"x": 0, "y": -1},
+      "glowing": false,
+      "tag": ""
+    },
+    {
+      "type": "hold",
+      "time": 33.24,
+      "face": "w",
+      "position": {"x": 0, "y": -1},
+      "glowing": false,
+      "tag": ""
+    },
+    {
+      "type": "hold",
+      "time": 33.33,
+      "face": "w",
+      "position": {"x": 0, "y": -1},
+      "glowing": false,
+      "tag": ""
+    },
+    {
+      "type": "hold",
+      "time": 33.43,
+      "face": "w",
+      "position": {"x": 0, "y": -1},
+      "glowing": false,
+      "tag": ""
+    },
+    {
+      "type": "hold",
+      "time": 33.53,
+      "face": "w",
+      "position": {"x": 0, "y": -1},
+      "glowing": false,
+      "tag": ""
+    },
+    {
+      "type": "hold",
+      "time": 33.63,
+      "face": "w",
+      "position": {"x": 0, "y": -1},
+      "glowing": false,
+      "tag": ""
+    },
+    {
+      "type": "hold",
+      "time": 33.73,
+      "face": "w",
+      "position": {"x": 0, "y": -1},
+      "glowing": false,
+      "tag": ""
+    },
+    {
+      "type": "hold",
+      "time": 33.83,
+      "face": "w",
+      "position": {"x": 0, "y": -1},
+      "glowing": false,
+      "tag": ""
+    },
+    {
+      "type": "hold",
+      "time": 33.93,
+      "face": "w",
+      "position": {"x": 0, "y": -1},
+      "glowing": false,
+      "tag": ""
+    },
+    {
+      "type": "hold",
+      "time": 34.03,
+      "face": "w",
+      "position": {"x": 0, "y": -1},
+      "glowing": false,
+      "tag": ""
+    },
+    {
+      "type": "hold",
+      "time": 34.13,
+      "face": "w",
+      "position": {"x": 0, "y": -1},
+      "glowing": false,
+      "tag": ""
+    },
+    {
+      "type": "hold",
+      "time": 34.23,
+      "face": "w",
+      "position": {"x": 0, "y": -1},
+      "glowing": false,
+      "tag": ""
+    },
+    {
+      "type": "hold",
+      "time": 34.33,
+      "face": "w",
+      "position": {"x": 0, "y": -1},
+      "glowing": false,
+      "tag": ""
+    },
+    {
+      "type": "hold",
+      "time": 34.43,
+      "face": "w",
+      "position": {"x": 0, "y": -1},
+      "glowing": false,
+      "tag": ""
+    },
+    {
+      "type": "hold",
+      "time": 34.53,
+      "face": "w",
+      "position": {"x": 0, "y": -1},
+      "glowing": false,
+      "tag": ""
+    },
+    {
+      "type": "flick",
+      "time": 36.92,
+      "face": "w",
+      "turn": "left",
+      "glowing": false,
+      "tag": ""
+    },
+    {
+      "type": "flick",
+      "time": 38.77,
+      "face": "a",
+      "turn": "right",
+      "glowing": false,
+      "tag": ""
+    },
+    {
+      "type": "drag",
+      "time": 42.46,
+      "face": "w",
+      "position": {"x": 2, "y": 1},
+      "glowing": false,
+      "tag": ""
+    },
+    {
+      "type": "drag",
+      "time": 42.69,
+      "face": "w",
+      "position": {"x": 2, "y": 0.5},
+      "glowing": false,
+      "tag": ""
+    },
+    {
+      "type": "drag",
+      "time": 42.92,
+      "face": "w",
+      "position": {"x": 2, "y": 0},
+      "glowing": false,
+      "tag": ""
+    },
+    {
+      "type": "drag",
+      "time": 43.15,
+      "face": "w",
+      "position": {"x": 2, "y": -0.5},
+      "glowing": false,
+      "tag": ""
+    },
+    {
+      "type": "drag",
+      "time": 43.38,
+      "face": "w",
+      "position": {"x": 2, "y": -1},
+      "glowing": false,
+      "tag": ""
+    },
+    {
+      "type": "drag",
+      "time": 43.5,
+      "face": "w",
+      "position": {"x": 1.5, "y": -1},
+      "glowing": false,
+      "tag": ""
+    },
+    {
+      "type": "drag",
+      "time": 43.61,
+      "face": "w",
+      "position": {"x": 1, "y": -1},
+      "glowing": false,
+      "tag": ""
+    },
+    {
+      "type": "drag",
+      "time": 43.73,
+      "face": "w",
+      "position": {"x": 0.5, "y": -1},
+      "glowing": false,
+      "tag": ""
+    },
+    {
+      "type": "drag",
+      "time": 43.84,
+      "face": "w",
+      "position": {"x": 0, "y": -1},
+      "glowing": false,
+      "tag": ""
+    },
+    {
+      "type": "drag",
+      "time": 43.96,
+      "face": "w",
+      "position": {"x": -0.5, "y": -1},
+      "glowing": false,
+      "tag": ""
+    },
+    {
+      "type": "drag",
+      "time": 44.07,
+      "face": "w",
+      "position": {"x": -1, "y": -1},
+      "glowing": false,
+      "tag": ""
+    },
+    {
+      "type": "drag",
+      "time": 44.19,
+      "face": "w",
+      "position": {"x": -1.5, "y": -1},
+      "glowing": false,
+      "tag": ""
+    },
+    {
+      "type": "drag",
+      "time": 44.3,
+      "face": "w",
+      "position": {"x": -2, "y": -1},
+      "glowing": false,
+      "tag": ""
+    }
+  ]
+}

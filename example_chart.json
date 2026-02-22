@@ -1,0 +1,164 @@
+{
+  "version": "1.0.0",
+  "metadata": {
+    "id": "example",
+    "title": "Example Chart",
+    "artist": "Test Artist",
+    "charter": "Test Charter",
+    "difficulty": {
+      "name": "Easy",
+      "level": 1,
+      "color": "AQUA"
+    },
+    "audio": "example.audio",
+    "duration": 60,
+    "offset": 0,
+    "bpm": 120
+  },
+  "notes": [
+    {
+      "type": "tap",
+      "time": 5.0,
+      "face": "w",
+      "position": {"x": 0, "y": 0},
+      "glowing": false,
+      "tag": ""
+    },
+    {
+      "type": "tap",
+      "time": 6.0,
+      "face": "a",
+      "position": {"x": 1, "y": 0},
+      "glowing": false,
+      "tag": ""
+    },
+    {
+      "type": "hold",
+      "time": 8.0,
+      "face": "s",
+      "position": {"x": 0, "y": 1},
+      "glowing": false,
+      "tag": ""
+    },
+    {
+      "type": "drag",
+      "time": 10.0,
+      "face": "d",
+      "position": {"x": -1, "y": 0},
+      "glowing": false,
+      "tag": ""
+    },
+    {
+      "type": "flick",
+      "time": 12.0,
+      "face": "w",
+      "turn": "left",
+      "glowing": false,
+      "tag": ""
+    },
+    {
+      "type": "double",
+      "time": 15.0,
+      "face": "w",
+      "positions": [
+        {"x": -1, "y": -1},
+        {"x": 1, "y": 1}
+      ],
+      "glowing": false,
+      "tag": ""
+    },
+    {
+      "type": "execution",
+      "time": 2.0,
+      "actions": [
+        {
+          "type": "title",
+          "enabled": true,
+          "title": "§6§lCubeRhythm",
+          "subtitle": "§e准备开始！",
+          "fadeIn": 10,
+          "stay": 40,
+          "fadeOut": 10
+        }
+      ]
+    },
+    {
+      "type": "execution",
+      "time": 7.0,
+      "actions": [
+        {
+          "type": "actionbar",
+          "enabled": true,
+          "text": "§b注意节奏！"
+        }
+      ]
+    },
+    {
+      "type": "execution",
+      "time": 9.0,
+      "actions": [
+        {
+          "type": "chat",
+          "enabled": true,
+          "message": "§a[提示] 即将出现 Hold 音符"
+        }
+      ]
+    },
+    {
+      "type": "execution",
+      "time": 11.0,
+      "actions": [
+        {
+          "type": "potion",
+          "enabled": true,
+          "effectType": "SPEED",
+          "duration": 100,
+          "amplifier": 1,
+          "ambient": false,
+          "particles": true,
+          "icon": true
+        },
+        {
+          "type": "actionbar",
+          "enabled": true,
+          "text": "§e速度提升！"
+        }
+      ]
+    },
+    {
+      "type": "execution",
+      "time": 13.0,
+      "actions": [
+        {
+          "type": "potion",
+          "enabled": false,
+          "effectType": "BLINDNESS",
+          "duration": 40,
+          "amplifier": 0,
+          "ambient": false,
+          "particles": false,
+          "icon": true
+        }
+      ]
+    },
+    {
+      "type": "execution",
+      "time": 16.0,
+      "actions": [
+        {
+          "type": "clear_effects",
+          "enabled": true
+        },
+        {
+          "type": "title",
+          "enabled": true,
+          "title": "§a效果已清除",
+          "subtitle": "",
+          "fadeIn": 5,
+          "stay": 20,
+          "fadeOut": 5
+        }
+      ]
+    }
+  ]
+}
