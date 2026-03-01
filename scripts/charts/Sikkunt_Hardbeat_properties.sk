@@ -1,0 +1,11 @@
+options:
+	谱面: Sikkunt_Hardbeat
+	曲名: Sikkunt Hardbeat
+	曲师: Marley Big B
+	谱师: sillybird
+	难度: &aBasic 7
+	时长: 155
+	偏移: 96
+
+on load:
+	registerChart("{@谱面}", "{@曲名}", "{@难度}", "{@曲师}", "{@谱师}", {@时长}, {@偏移})

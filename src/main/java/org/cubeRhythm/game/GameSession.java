@@ -87,6 +87,23 @@ public class GameSession {
         String subtitle = "§e" + chart.getMetadata().getArtist() + " §7| §e" + chart.getMetadata().getCharter();
         player.sendTitle(title, subtitle, 10, 60, 20); // 0.5s淡入, 3s停留, 1s淡出
 
+        // 播放音频预览（在标题显示期间）
+        String audioKey = chart.getMetadata().getAudio();
+        if (audioKey != null && !audioKey.isEmpty()) {
+            try {
+                player.playSound(player.getLocation(), audioKey, 1.0f, 1.0f);
+                instance.getLogger().info("播放音乐预览: " + audioKey);
+
+                // 在标题消失时停止音频（90 ticks = 4.5秒后）
+                PlanetLib.getScheduler().runLater(() -> {
+                    player.stopSound(audioKey);
+                    instance.getLogger().info("停止音乐预览: " + audioKey);
+                }, 90L);
+            } catch (Exception e) {
+                instance.getLogger().warning("无法播放音乐预览 " + audioKey + ": " + e.getMessage());
+            }
+        }
+
         // 延迟5秒后开始游戏
         PlanetLib.getScheduler().runLater(this::startGameplay, 100L); // 5秒 = 100 ticks
     }

@@ -500,24 +500,30 @@ The action bar shows "§e[DOUBLE 第2个位置]" indicator during placement mode
 
 ### Game Flow
 
-1. Player runs `/play [chartId] [speed]` or uses `/gui` to open chart selector
+1. Player runs `/play [chartId] [speed] [difficulty]` or uses `/gui` to open chart selector
 2. `PlayCommand` creates `GameSession` with chart and player settings from `PlayerSettingsManager`
 3. `GameSession.start()` initializes:
-   - `NoteSpawner` for spawning notes
-   - `InputHandler` for capturing player input
-   - `EntityManager` for tracking note entities
-   - `JudgmentManager` and `ScoreManager` for scoring
-   - `GameHUD` for displaying real-time game information on all 4 faces
-   - Movement restriction to prevent player position changes
-4. Game loop runs at 20 TPS:
+   - Teleports player to game location
+   - Displays title screen with song information (4.5 seconds)
+   - Plays audio preview during title display, stops when title disappears
+   - Waits 5 seconds total before starting gameplay
+4. `GameSession.startGameplay()` begins actual gameplay:
+   - Initializes `NoteSpawner` for spawning notes
+   - Initializes `InputHandler` for capturing player input
+   - Initializes `EntityManager` for tracking note entities
+   - Initializes `JudgmentManager` and `ScoreManager` for scoring
+   - Initializes `GameHUD` for displaying real-time game information on all 4 faces
+   - Applies movement restriction to prevent player position changes
+   - Starts playing audio for gameplay
+5. Game loop runs at 20 TPS:
    - Updates `currentTime` based on elapsed milliseconds + offset
    - `NoteSpawner` spawns notes when distance < 50 blocks
    - `NoteRenderer` updates all note positions each tick
    - Auto-judgment for DRAG (raycast), HOLD (key press), FLICK (camera angle)
    - Manual judgment for TAP via `InputHandler` click events
    - Removes notes that pass judgment line (distance < 4 - speed*4)
-5. Game ends when `currentTime >= chart.duration`
-6. `GameSession.end()` displays `ResultScreen` with detailed statistics and cleans up
+6. Game ends when `currentTime >= chart.duration`
+7. `GameSession.end()` displays `ResultScreen` with detailed statistics and cleans up
 
 ### Timing System
 

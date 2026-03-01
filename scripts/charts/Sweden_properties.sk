@@ -1,0 +1,11 @@
+options:
+	谱面: Sweden
+	曲名: Sweden
+	曲师: C418
+	谱师: sillybird
+	难度: &aBasic 3
+	时长: 215
+	偏移: 1100
+
+on load:
+	registerChart("{@谱面}", "{@曲名}", "{@难度}", "{@曲师}", "{@谱师}", {@时长}, {@偏移})
