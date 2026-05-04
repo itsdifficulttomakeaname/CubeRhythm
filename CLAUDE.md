@@ -949,10 +949,6 @@ Movement restriction is automatically applied during gameplay:
 
 ## Documentation
 
-Comprehensive Chinese documentation in root directory:
-- `README - 文档总览.md`: Documentation index
-- `游戏流程与功能实现.md`: Game flow and mechanics
-- `铺面文件格式说明.md`: Chart format specification
-- `音符渲染系统说明.md`: Note rendering system
-- `铺面加载流程说明.md`: Chart loading process
-- `编辑器数据结构说明.md`: Editor data structures
+- `docs/CHART_FORMAT.md`: Chart JSON format, note types, face system, Skript migration
+- `docs/GAME_SYSTEMS.md`: Judgment system, HUD, result screen, movement restriction, performance optimizations, coordinate system
+- `docs/EDITOR.md`: Deprecated in-game editor reference

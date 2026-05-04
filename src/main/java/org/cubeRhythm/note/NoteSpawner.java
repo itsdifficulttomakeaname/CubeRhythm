@@ -1,5 +1,6 @@
 package org.cubeRhythm.note;
 
+import lombok.Setter;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.cubeRhythm.chart.Chart;
@@ -21,6 +22,8 @@ public class NoteSpawner {
     private final double centerX;
     private final double centerY;
     private final double centerZ;
+    @Setter
+    private EasingMotionManager easingMotionManager;
 
     private static final int MAX_ENTITIES = 100;
     private static final double SPAWN_DISTANCE = 50.0;
@@ -69,7 +72,7 @@ public class NoteSpawner {
         }
 
         for (Note note : toExecute) {
-            ExecutionHandler.executeActions(player, note);
+            ExecutionHandler.executeActions(player, note, entityManager, easingMotionManager);
             unexecutedActions.remove(note);
         }
 
@@ -109,7 +112,7 @@ public class NoteSpawner {
     }
 
     private double calculateDistance(double noteTime, double currentTime) {
-        return speed * 20 * (noteTime - currentTime) + 4;
+        return speed * 20 * (noteTime + 1.0 - currentTime) + 4;
     }
 
     public boolean hasUnspawnedNotes() {

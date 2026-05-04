@@ -18,6 +18,7 @@ public class NoteEntity extends Note {
     private List<TextDisplay> textDisplays = new ArrayList<>();
     private List<BlockDisplay> additionalBlockDisplays = new ArrayList<>();  // For DOUBLE notes
     private List<Interaction> additionalInteractions = new ArrayList<>();  // For DOUBLE notes (second hitbox)
+    private BlockDisplay connectLine;  // For DOUBLE notes: line connecting two positions
 
     private long spawnTime;
     private Double hitTime;
@@ -28,9 +29,18 @@ public class NoteEntity extends Note {
 
     // 用于 hold 音符
     private int holdingCounter;
+    private float holdScaleZ = 0; // HOLD 音符的前端偏移（用于判定时机修正）
 
     // 用于 double 音符
     private NoteEntity linkedNote;
+
+    // easing_motion 状态
+    private double xOffset = 0;
+    private double yOffset = 0;
+    private Double easingStartTime = null;
+    private Double easingLambda = null;
+    private String easingType = null;
+    private double easingStartDistance = 0;
 
     public NoteEntity(Note note) {
         this.setTime(note.getTime());
@@ -74,5 +84,10 @@ public class NoteEntity extends Note {
             }
         }
         additionalInteractions.clear();
+
+        if (connectLine != null && !connectLine.isDead()) {
+            connectLine.remove();
+        }
+        connectLine = null;
     }
 }

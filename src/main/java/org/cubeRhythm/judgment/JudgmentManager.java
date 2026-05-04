@@ -37,9 +37,10 @@ public class JudgmentManager {
         Face face = noteEntity.getFace();
         double distance = CoordinateSystem.calculateDistance(notePos, face, centerX, centerZ);
 
-        // 注意：distance > 0 表示音符还没到判定线（在前方），应该是 EARLY（负值）
-        //      distance < 0 表示音符已经过了判定线（在后方），应该是 LATE（正值）
-        // 所以需要反转符号
+        if (noteEntity.getType() == org.cubeRhythm.note.NoteType.HOLD) {
+            distance -= noteEntity.getHoldScaleZ();
+        }
+
         return (int) ((-distance / speed) * 50);
     }
 

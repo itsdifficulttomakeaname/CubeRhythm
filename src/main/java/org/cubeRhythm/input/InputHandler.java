@@ -16,7 +16,9 @@ import org.bukkit.event.player.PlayerAnimationEvent;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.util.RayTraceResult;
+import org.cubeRhythm.coordinate.CoordinateSystem;
 import org.cubeRhythm.entity.DisplayEntityFactory;
+import org.cubeRhythm.manager.OffsetConfig;
 import org.cubeRhythm.entity.EntityManager;
 import org.cubeRhythm.game.GameSession;
 import org.cubeRhythm.input.CancelFlagManager.CancelFlag;
@@ -93,7 +95,7 @@ public class InputHandler implements Listener {
             ensureSnowballs(player);
 
             // 记录右键事件
-            org.cubeRhythm.Main.instance.getLogger().fine("右键事件已处理 (ProjectileLaunch)");
+//            org.cubeRhythm.Main.instance.getLogger().fine("右键事件已处理 (ProjectileLaunch)");
         }
     }
 
@@ -155,17 +157,17 @@ public class InputHandler implements Listener {
 
                 // 如果不在判定窗口内（提前超过 80ms），不处理
                 if (judgment == null) {
-                    org.cubeRhythm.Main.instance.getLogger().info(
-                        String.format("点击过早，不在判定窗口内: type=%s, offset=%dms",
-                            noteEntity.getType(), timingOffset)
-                    );
+//                    org.cubeRhythm.Main.instance.getLogger().info(
+//                        String.format("点击过早，不在判定窗口内: type=%s, offset=%dms",
+//                            noteEntity.getType(), timingOffset)
+//                    );
                     return;
                 }
 
-                org.cubeRhythm.Main.instance.getLogger().info(
-                    String.format("直接点击实体判定: type=%s, offset=%dms, judgment=%s",
-                        noteEntity.getType(), timingOffset, judgment)
-                );
+//                org.cubeRhythm.Main.instance.getLogger().info(
+//                    String.format("直接点击实体判定: type=%s, offset=%dms, judgment=%s",
+//                        noteEntity.getType(), timingOffset, judgment)
+//                );
 
                 // 处理特殊音符类型
                 if (noteEntity.getType() == NoteType.DOUBLE) {
@@ -220,7 +222,7 @@ public class InputHandler implements Listener {
         ensureSnowballs(player);
 
         // 记录右键事件
-        org.cubeRhythm.Main.instance.getLogger().info("右键事件已处理 (PlayerInteract)");
+//        org.cubeRhythm.Main.instance.getLogger().info("右键事件已处理 (PlayerInteract)");
     }
 
     /**
@@ -228,7 +230,7 @@ public class InputHandler implements Listener {
      */
     private void handleClickInput(Player player) {
         // 记录点击事件
-        org.cubeRhythm.Main.instance.getLogger().fine("处理点击输入");
+//        org.cubeRhythm.Main.instance.getLogger().fine("处理点击输入");
 
         // 射线检测以找到目标交互实体
         RayTraceResult result = player.getWorld().rayTraceEntities(
@@ -240,7 +242,7 @@ public class InputHandler implements Listener {
 
         if (result == null || result.getHitEntity() == null) {
             // 未击中任何音符 - 这是正常的
-            org.cubeRhythm.Main.instance.getLogger().fine("未击中任何音符");
+//            org.cubeRhythm.Main.instance.getLogger().fine("未击中任何音符");
             return;
         }
 
@@ -249,18 +251,18 @@ public class InputHandler implements Listener {
             return;
         }
 
-        org.cubeRhythm.Main.instance.getLogger().fine("击中 Interaction 实体");
+//        org.cubeRhythm.Main.instance.getLogger().fine("击中 Interaction 实体");
 
         // 查找对应的 NoteEntity
         NoteEntity noteEntity = findNoteEntityByInteraction(interaction);
         if (noteEntity == null) {
-            org.cubeRhythm.Main.instance.getLogger().warning("找到 Interaction 但无法找到对应的 NoteEntity");
+//            org.cubeRhythm.Main.instance.getLogger().warning("找到 Interaction 但无法找到对应的 NoteEntity");
             return;
         }
 
         if (noteEntity.isHit()) {
             // 音符已经被击中，忽略
-            org.cubeRhythm.Main.instance.getLogger().fine("音符已被击中，忽略");
+//            org.cubeRhythm.Main.instance.getLogger().fine("音符已被击中，忽略");
             return;
         }
 
@@ -270,18 +272,18 @@ public class InputHandler implements Listener {
 
         // 如果不在判定窗口内（提前超过 80ms），不处理
         if (judgment == null) {
-            org.cubeRhythm.Main.instance.getLogger().info(
-                String.format("点击过早，不在判定窗口内: type=%s, offset=%dms",
-                    noteEntity.getType(), timingOffset)
-            );
+//            org.cubeRhythm.Main.instance.getLogger().info(
+//                String.format("点击过早，不在判定窗口内: type=%s, offset=%dms",
+//                    noteEntity.getType(), timingOffset)
+//            );
             return;
         }
 
         // 记录判定信息
-        org.cubeRhythm.Main.instance.getLogger().info(
-            String.format("音符判定: type=%s, offset=%dms, judgment=%s",
-                noteEntity.getType(), timingOffset, judgment)
-        );
+//        org.cubeRhythm.Main.instance.getLogger().info(
+//            String.format("音符判定: type=%s, offset=%dms, judgment=%s",
+//                noteEntity.getType(), timingOffset, judgment)
+//        );
 
         // 处理特殊音符类型
         if (noteEntity.getType() == NoteType.DOUBLE) {
@@ -375,55 +377,95 @@ public class InputHandler implements Listener {
 
     /**
      * 显示判定文本（公共方法，供 GameSession 调用）
-     * 注意：浮动判定文本已禁用，因为会遮挡视野
      */
     public void showJudgmentText(NoteEntity noteEntity, JudgmentResult judgment, int timingOffset) {
-        // 浮动判定文本已禁用 - 太挡视野
-        // 判定结果仍然会在状态栏显示
+        Player player = gameSession.getPlayer();
+        if (judgment == JudgmentResult.MISS) {
+            player.sendTitle("", "§4Miss", 2, 10, 6);
+            return;
+        }
 
-        /* 原始代码已注释
-        String displayText = judgment.getDisplayText();
+        if (noteEntity.getType() == NoteType.HOLD) return;
+        if (noteEntity.getBlockDisplay() == null) return;
 
-        // 只有TAP和DOUBLE音符有JUST判定，需要显示EARLY/LATE
-        // DRAG、HOLD、FLICK只有EXACT判定
-        if (judgment == JudgmentResult.JUST) {
-            NoteType type = noteEntity.getType();
-            if (type == NoteType.TAP || type == NoteType.DOUBLE) {
-                displayText += " " + judgmentManager.getEarlyLate(timingOffset);
+        double cx = gameSession.getCenterX(), cy = gameSession.getCenterY(), cz = gameSession.getCenterZ();
+        String color = judgment == JudgmentResult.EXACT ? "§b" : "§e";
+        String label = (judgment == JudgmentResult.EXACT ? color + "Exact" : color + "Just");
+        if (judgment == JudgmentResult.JUST) label += " " + judgmentManager.getEarlyLate(timingOffset);
+
+        float yaw = switch (noteEntity.getFace()) {
+            case W -> 180f; case A -> 90f; case S -> 0f; case D -> 270f;
+        };
+
+        OffsetConfig oc = OffsetConfig.get();
+        if (noteEntity.getType() == NoteType.DOUBLE && noteEntity.getPositions() != null) {
+            for (org.cubeRhythm.coordinate.NotePosition pos : noteEntity.getPositions()) {
+                Location l = CoordinateSystem.transformCoordinates(
+                    noteEntity.getBlockDisplay().getWorld(), noteEntity.getFace(),
+                    pos.getX() + 0.0, pos.getY() + oc.cursorY(noteEntity.getFace()),
+                    oc.cursorZ(noteEntity.getFace()), cx, cy, cz);
+                l.setYaw(yaw);
+                spawnHitEffect(l, color, label, judgment);
             }
-        }
-
-        // 创建判定文本显示实体
-        if (noteEntity.getBlockDisplay() != null) {
-            Location noteLocation = noteEntity.getBlockDisplay().getLocation();
-            // 在音符上方 1.5 格显示判定文本
-            Location textLocation = noteLocation.clone().add(0, 1.5, 0);
-
-            org.cubeRhythm.Main.instance.getLogger().info("创建判定文字: " + displayText + " at " + textLocation);
-
-            TextDisplay textDisplay = DisplayEntityFactory.createTextDisplay(
-                noteLocation.getWorld(),
-                textLocation,
-                displayText,
-                5  // 插值持续时间（ticks）
-            );
-
-            // 不要添加到音符实体的文本显示列表，因为音符会立即被清理
-            // 判定文本应该独立存在并在1秒后自动移除
-
-            org.cubeRhythm.Main.instance.getLogger().info("判定文字已创建，UUID: " + textDisplay.getUniqueId());
-
-            // 1 秒后移除文本显示（20 ticks）
-            PlanetLib.getScheduler().runLater(() -> {
-                if (!textDisplay.isDead()) {
-                    textDisplay.remove();
-                    org.cubeRhythm.Main.instance.getLogger().info("判定文字已移除");
-                }
-            }, 20L);
         } else {
-            org.cubeRhythm.Main.instance.getLogger().warning("无法创建判定文字：BlockDisplay 为 null");
+            double nx = noteEntity.getPosition() != null ? noteEntity.getPosition().getX() + 0.0 : 0;
+            double ny = noteEntity.getPosition() != null ? noteEntity.getPosition().getY() + oc.cursorY(noteEntity.getFace()) : oc.cursorY(noteEntity.getFace());
+            Location loc = CoordinateSystem.transformCoordinates(
+                noteEntity.getBlockDisplay().getWorld(), noteEntity.getFace(), nx, ny,
+                oc.cursorZ(noteEntity.getFace()), cx, cy, cz);
+            loc.setYaw(yaw);
+            spawnHitEffect(loc, color, label, judgment);
         }
-        */
+    }
+
+    private void spawnHitEffect(Location loc, String color, String label, JudgmentResult judgment) {
+        OffsetConfig oc = OffsetConfig.get();
+        float initScale = (float) oc.hitEffectScale;
+        float txf = (float) oc.hitEffectTransXFactor;
+        float tyf = (float) oc.hitEffectTransYFactor;
+
+        TextDisplay textEnt = DisplayEntityFactory.createTextDisplay(loc.getWorld(), loc, label, 0);
+        textEnt.setBillboard(org.bukkit.entity.Display.Billboard.FIXED);
+        textEnt.setBackgroundColor(org.bukkit.Color.fromARGB(0));
+        textEnt.setShadowed(false);
+        org.bukkit.util.Transformation t1 = textEnt.getTransformation();
+        t1.getScale().set(initScale, initScale, initScale);
+        t1.getTranslation().set(-initScale * txf, -initScale * tyf, 0);
+        textEnt.setTransformation(t1);
+        textEnt.setTextOpacity((byte) 255);
+
+        TextDisplay glowEnt = DisplayEntityFactory.createTextDisplay(loc.getWorld(), loc, color + "█", 0);
+        glowEnt.setBillboard(org.bukkit.entity.Display.Billboard.FIXED);
+        glowEnt.setBackgroundColor(org.bukkit.Color.fromARGB(0));
+        glowEnt.setShadowed(false);
+        org.bukkit.util.Transformation tg = glowEnt.getTransformation();
+        tg.getScale().set(initScale, initScale, initScale);
+        tg.getTranslation().set(-initScale * txf, -initScale * tyf, 0);
+        glowEnt.setTransformation(tg);
+        glowEnt.setTextOpacity((byte) 63);
+        float decayFactor = (float) (judgment == JudgmentResult.EXACT ? oc.hitEffectDecayExact : oc.hitEffectDecayJust);
+
+        final float[] scale1 = {initScale}, scale2 = {initScale};
+        final int[] alpha = {255}, tick = {0};
+        cn.jason31416.planetlib.lib.folialib.wrapper.task.WrappedTask[] th = new cn.jason31416.planetlib.lib.folialib.wrapper.task.WrappedTask[1];
+        th[0] = PlanetLib.getScheduler().runTimer(() -> {
+            tick[0]++;
+            alpha[0] = Math.max(0, alpha[0] - (int) oc.hitEffectAlphaDecay);
+            scale1[0] = Math.max((float) oc.hitEffectScaleMin, scale1[0] * (float) oc.hitEffectScaleDecay);
+            org.bukkit.util.Transformation tr1 = textEnt.getTransformation();
+            tr1.getScale().set(scale1[0], scale1[0], scale1[0]);
+            tr1.getTranslation().set(-scale1[0] * txf, -scale1[0] * tyf, 0);
+            textEnt.setTransformation(tr1);
+            textEnt.setTextOpacity((byte) alpha[0]);
+            scale2[0] *= decayFactor;
+            float gs = (float) oc.hitEffectGlowBase - scale2[0];
+            org.bukkit.util.Transformation tr2 = glowEnt.getTransformation();
+            tr2.getScale().set(gs, gs, gs);
+            tr2.getTranslation().set(-gs * txf, -gs * tyf, 0);
+            glowEnt.setTransformation(tr2);
+            glowEnt.setTextOpacity((byte) (alpha[0] > (int) oc.hitEffectGlowAlphaThreshold ? alpha[0] / 4 : (int) oc.hitEffectGlowAlphaMin));
+            if (tick[0] >= oc.hitEffectDuration) { th[0].cancel(); textEnt.remove(); glowEnt.remove(); }
+        }, 0L, 1L);
     }
 
     private NoteEntity findNoteEntityByInteraction(Interaction interaction) {

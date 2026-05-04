@@ -205,13 +205,13 @@ public class ResultScreen {
 
         Location startLoc = CoordinateSystem.transformCoordinates(
             player.getWorld(), Face.W,
-            -4, 2.5, 12,
+            -3.5, 0.5, 12,
             centerLoc.getX(), centerLoc.getY(), centerLoc.getZ()
         );
 
         Location endLoc = CoordinateSystem.transformCoordinates(
             player.getWorld(), Face.W,
-            0, 2.5, 12,
+            5.5, 0.5, 12,
             centerLoc.getX(), centerLoc.getY(), centerLoc.getZ()
         );
 
@@ -225,7 +225,7 @@ public class ResultScreen {
         Transformation trans = entity.getTransformation();
         trans.getLeftRotation().set(new AxisAngle4f((float) Math.toRadians(180), 0, 1, 0));
         trans.getScale().set(new Vector3f(10, 10, 10));
-        trans.getTranslation().set(new Vector3f(0, -1, 0));
+        trans.getTranslation().set(new Vector3f(-0.2f, -1, 0));
         entity.setTransformation(trans);
         entity.setBrightness(new org.bukkit.entity.Display.Brightness(15, 15));
 
@@ -252,13 +252,13 @@ public class ResultScreen {
     private void showScoreDisplay() {
         Location startLoc = CoordinateSystem.transformCoordinates(
             player.getWorld(), Face.W,
-            -6, 1, 11,
+            -7, 2, 10,
             centerLoc.getX(), centerLoc.getY(), centerLoc.getZ()
         );
 
         Location endLoc = CoordinateSystem.transformCoordinates(
             player.getWorld(), Face.W,
-            -2, 1, 11,
+            -1.5, 2, 10,
             centerLoc.getX(), centerLoc.getY(), centerLoc.getZ()
         );
 
@@ -271,8 +271,8 @@ public class ResultScreen {
 
         Transformation trans = entity.getTransformation();
         trans.getLeftRotation().set(new AxisAngle4f((float) Math.toRadians(180), 0, 1, 0));
-        trans.getScale().set(new Vector3f(6, 6, 6));
-        trans.getTranslation().set(new Vector3f(0, -1, 0));
+        trans.getScale().set(new Vector3f(8, 8, 8));
+        trans.getTranslation().set(new Vector3f(0, -1.5f, 0));
         entity.setTransformation(trans);
         entity.setBrightness(new org.bukkit.entity.Display.Brightness(15, 15));
 
@@ -309,13 +309,13 @@ public class ResultScreen {
     private void showStatisticsDisplay() {
         Location startLoc = CoordinateSystem.transformCoordinates(
             player.getWorld(), Face.W,
-            -6, -1, 11,
+            -5.5, 2, 10,
             centerLoc.getX(), centerLoc.getY(), centerLoc.getZ()
         );
 
         Location endLoc = CoordinateSystem.transformCoordinates(
             player.getWorld(), Face.W,
-            -2.5, -1, 11,
+            0, 2, 10,
             centerLoc.getX(), centerLoc.getY(), centerLoc.getZ()
         );
 
@@ -338,7 +338,7 @@ public class ResultScreen {
         Transformation trans = entity.getTransformation();
         trans.getLeftRotation().set(new AxisAngle4f((float) Math.toRadians(180), 0, 1, 0));
         trans.getScale().set(new Vector3f(2, 2, 2));
-        trans.getTranslation().set(new Vector3f(0, -2, 0));
+        trans.getTranslation().set(new Vector3f(0, -4.5f, 0));
         entity.setTransformation(trans);
         entity.setBrightness(new org.bukkit.entity.Display.Brightness(15, 15));
 
@@ -396,7 +396,7 @@ public class ResultScreen {
 
         Transformation trans = entity.getTransformation();
         trans.getLeftRotation().set(new AxisAngle4f((float) Math.toRadians(180), 0, 1, 0));
-        trans.getScale().set(new Vector3f(2.5f, 2.5f, 2.5f));
+        trans.getScale().set(new Vector3f(3f, 3f, 3f));
         entity.setTransformation(trans);
         entity.setBrightness(new org.bukkit.entity.Display.Brightness(15, 15));
 
@@ -451,40 +451,29 @@ public class ResultScreen {
         return result.toString();
     }
 
-    /**
-     * 获取评级颜色
-     */
     private String getRankColor(String rank) {
         return switch (rank) {
-            case "SSS+", "SSS" -> "§d§l";
-            case "SS+", "SS" -> "§5§l";
-            case "S+", "S" -> "§6§l";
-            case "A+", "A" -> "§e§l";
-            case "B+", "B" -> "§a§l";
-            case "C+", "C" -> "§2§l";
-            default -> "§7§l";
+            case "SSS+", "SSS", "SS", "S" -> "§e";
+            case "AAA", "AA", "A" -> "§a";
+            case "BBB", "BB", "B" -> "§b";
+            case "C" -> "§2";
+            default -> "§7";
         };
     }
 
-    /**
-     * 计算评级
-     */
     private String calculateRank() {
-        double accuracy = scoreManager.getAccuracy();
-        boolean isPerfect = scoreManager.isFullPerfect();
-
-        if (isPerfect) return "SSS+";
-        if (accuracy >= 99.5) return "SSS";
-        if (accuracy >= 99.0) return "SS+";
-        if (accuracy >= 98.0) return "SS";
-        if (accuracy >= 97.0) return "S+";
-        if (accuracy >= 95.0) return "S";
-        if (accuracy >= 93.0) return "A+";
-        if (accuracy >= 90.0) return "A";
-        if (accuracy >= 85.0) return "B+";
-        if (accuracy >= 80.0) return "B";
-        if (accuracy >= 75.0) return "C+";
-        if (accuracy >= 70.0) return "C";
+        int score = scoreManager.getScore();
+        if (scoreManager.isFullPerfect()) return "SSS+";
+        if (score >= 990000) return "SSS";
+        if (score >= 980000) return "SS";
+        if (score >= 960000) return "S";
+        if (score >= 950000) return "AAA";
+        if (score >= 940000) return "AA";
+        if (score >= 930000) return "A";
+        if (score >= 920000) return "BBB";
+        if (score >= 910000) return "BB";
+        if (score >= 900000) return "B";
+        if (score >= 850000) return "C";
         return "D";
     }
 

@@ -11,7 +11,9 @@ import org.cubeRhythm.command.PlayCommand;
 import org.cubeRhythm.game.GameSession;
 import org.cubeRhythm.game.MovementRestriction;
 import org.cubeRhythm.gui.GUIListener;
+import org.cubeRhythm.command.ReloadCommand;
 import org.cubeRhythm.manager.ConfigManager;
+import org.cubeRhythm.manager.OffsetConfig;
 import org.cubeRhythm.manager.PlayerSettingsManager;
 
 import java.util.Objects;
@@ -31,6 +33,7 @@ import java.util.Objects;
 
         // Initialize config manager
         configManager = new ConfigManager();
+        OffsetConfig.init();
 
         // Initialize player settings manager
         playerSettingsManager = new PlayerSettingsManager(this);
@@ -58,6 +61,7 @@ import java.util.Objects;
         Objects.requireNonNull(getCommand("play")).setExecutor(new PlayCommand(chartRegistry));
         Objects.requireNonNull(getCommand("exit")).setExecutor(new ExitCommand());
         Objects.requireNonNull(getCommand("gui")).setExecutor(new GUICommand());
+        Objects.requireNonNull(getCommand("creload")).setExecutor(new ReloadCommand());
 
         // DEPRECATED: Editor commands disabled
         // Objects.requireNonNull(getCommand("editor")).setExecutor(new org.cubeRhythm.editor.EditorCommand());

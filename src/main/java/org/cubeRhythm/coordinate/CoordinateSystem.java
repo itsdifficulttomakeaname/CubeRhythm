@@ -38,10 +38,10 @@ public class CoordinateSystem {
      */
     public static double calculateDistance(Location notePos, Face face, double centerX, double centerZ) {
         return switch (face) {
-            case W -> notePos.getZ() - (centerZ + 4);
-            case A -> notePos.getX() - (centerX + 4);
-            case S -> (centerZ - 4) - notePos.getZ();
-            case D -> (centerX - 4) - notePos.getX();
+            case W -> notePos.getZ() - (centerZ + 3);
+            case A -> notePos.getX() - (centerX + 3);
+            case S -> (centerZ - 3) - notePos.getZ();
+            case D -> (centerX - 3) - notePos.getX();
         };
     }
 }

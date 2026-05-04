@@ -1,0 +1,39 @@
+{
+  "version": "1.0.0",
+  "metadata": {
+    "id": "test_chart",
+    "title": "Test Chart",
+    "artist": "Test",
+    "charter": "Test",
+    "difficulty": {"name": "Test", "color": "&f", "level": 1},
+    "audio": "",
+    "duration": 45,
+    "offset": 0,
+    "bpm": 60
+  },
+  "notes": [
+    {"type": "tap",    "time": 2,  "face": "w", "position": {"x": 0, "y": 0}, "glowing": false, "tag": ""},
+    {"type": "hold",   "time": 4,  "face": "w", "position": {"x": 0, "y": 0}, "glowing": false, "tag": ""},
+    {"type": "drag",   "time": 6,  "face": "w", "position": {"x": 0, "y": 0}, "glowing": false, "tag": ""},
+    {"type": "double", "time": 8, "face": "w", "positions": [{"x": -1, "y": 0}, {"x": 1, "y": 0}], "glowing": false, "tag": ""},
+    {"type": "flick",  "time": 10, "face": "w", "turn": "left",               "glowing": false, "tag": ""},
+
+    {"type": "tap",    "time": 12, "face": "a", "position": {"x": 0, "y": 0}, "glowing": false, "tag": ""},
+    {"type": "hold",   "time": 14, "face": "a", "position": {"x": 0, "y": 0}, "glowing": false, "tag": ""},
+    {"type": "drag",   "time": 16, "face": "a", "position": {"x": 0, "y": 0}, "glowing": false, "tag": ""},
+    {"type": "double", "time": 18, "face": "a", "positions": [{"x": -1, "y": 0}, {"x": 1, "y": 0}], "glowing": false, "tag": ""},
+    {"type": "flick",  "time": 20, "face": "a", "turn": "left",               "glowing": false, "tag": ""},
+
+    {"type": "tap",    "time": 22, "face": "s", "position": {"x": 0, "y": 0}, "glowing": false, "tag": ""},
+    {"type": "hold",   "time": 24, "face": "s", "position": {"x": 0, "y": 0}, "glowing": false, "tag": ""},
+    {"type": "drag",   "time": 26, "face": "s", "position": {"x": 0, "y": 0}, "glowing": false, "tag": ""},
+    {"type": "double", "time": 28, "face": "s", "positions": [{"x": -1, "y": 0}, {"x": 1, "y": 0}], "glowing": false, "tag": ""},
+    {"type": "flick",  "time": 30, "face": "s", "turn": "left",               "glowing": false, "tag": ""},
+
+    {"type": "tap",    "time": 32, "face": "d", "position": {"x": 0, "y": 0}, "glowing": false, "tag": ""},
+    {"type": "hold",   "time": 34, "face": "d", "position": {"x": 0, "y": 0}, "glowing": false, "tag": ""},
+    {"type": "drag",   "time": 36, "face": "d", "position": {"x": 0, "y": 0}, "glowing": false, "tag": ""},
+    {"type": "double", "time": 38, "face": "d", "positions": [{"x": -1, "y": 0}, {"x": 1, "y": 0}], "glowing": false, "tag": ""},
+    {"type": "flick",  "time": 40, "face": "d", "turn": "left",               "glowing": false, "tag": ""}
+  ]
+}

@@ -7,13 +7,12 @@ import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.cubeRhythm.chart.Chart;
+import org.cubeRhythm.coordinate.Face;
 import org.cubeRhythm.entity.EntityManager;
 import org.cubeRhythm.input.InputHandler;
 import org.cubeRhythm.judgment.JudgmentManager;
 import org.cubeRhythm.judgment.ScoreManager;
-import org.cubeRhythm.note.NoteEntity;
-import org.cubeRhythm.note.NoteRenderer;
-import org.cubeRhythm.note.NoteSpawner;
+import org.cubeRhythm.note.*;
 
 import static org.cubeRhythm.Main.instance;
 
@@ -29,11 +28,15 @@ public class GameSession {
     private final ScoreManager scoreManager;
     private NoteSpawner noteSpawner;
     private InputHandler inputHandler;
-    private GameHUD gameHUD;  // 游戏内 HUD 显示
+    private GameHUD gameHUD;
+    private EasingMotionManager easingMotionManager;
 
     private WrappedTask gameLoop;
+    private WrappedTask previewStopTask;
+    private WrappedTask startGameplayTask;
     private long startTime;
     private double currentTime;
+    private int globalTick = 0;
 
     private String playingAudioKey; // 存储正在播放的音乐key，用于停止
 
@@ -85,17 +88,19 @@ public class GameSession {
         // 显示歌曲信息
         String title = "§6§l" + chart.getMetadata().getTitle();
         String subtitle = "§e" + chart.getMetadata().getArtist() + " §7| §e" + chart.getMetadata().getCharter();
-        player.sendTitle(title, subtitle, 10, 60, 20); // 0.5s淡入, 3s停留, 1s淡出
+        if (settings.isAutoPlay()) subtitle += " §8| §aAutoPlay §8| §a自动演示中";
+        player.sendTitle(title, subtitle, 10, 60, 20);
 
         // 播放音频预览（在标题显示期间）
         String audioKey = chart.getMetadata().getAudio();
         if (audioKey != null && !audioKey.isEmpty()) {
+            playingAudioKey = audioKey;
             try {
                 player.playSound(player.getLocation(), audioKey, 1.0f, 1.0f);
                 instance.getLogger().info("播放音乐预览: " + audioKey);
 
                 // 在标题消失时停止音频（90 ticks = 4.5秒后）
-                PlanetLib.getScheduler().runLater(() -> {
+                previewStopTask = PlanetLib.getScheduler().runLater(() -> {
                     player.stopSound(audioKey);
                     instance.getLogger().info("停止音乐预览: " + audioKey);
                 }, 90L);
@@ -105,7 +110,7 @@ public class GameSession {
         }
 
         // 延迟5秒后开始游戏
-        PlanetLib.getScheduler().runLater(this::startGameplay, 100L); // 5秒 = 100 ticks
+        startGameplayTask = PlanetLib.getScheduler().runLater(this::startGameplay, 100L);
     }
 
     /**
@@ -125,6 +130,9 @@ public class GameSession {
             centerZ
         );
 
+        easingMotionManager = new EasingMotionManager(entityManager);
+        noteSpawner.setEasingMotionManager(easingMotionManager);
+
         instance.getLogger().info("未生成音符数: " + noteSpawner.getUnspawnedCount());
 
         // 初始化输入处理器
@@ -138,24 +146,23 @@ public class GameSession {
         gameHUD = new GameHUD(player, chart, scoreManager, settings);
         gameHUD.initialize();
 
-        // 启动游戏循环
+        // 启动游戏循环（立即开始，currentTime 从 -1 开始，音符提前1秒渲染）
         startTime = System.currentTimeMillis();
         state = GameState.PLAYING;
 
         gameLoop = PlanetLib.getScheduler().runTimer(this::tick, 0L, 1L);
 
-        // 播放音乐：音频立即播放，不受铺面延迟影响
+        // 延迟1秒播放音乐，与 currentTime=0 时刻对齐
         String audioKey = chart.getMetadata().getAudio();
         if (audioKey != null && !audioKey.isEmpty()) {
-            try {
-                // 立即播放音频
-                player.playSound(player.getLocation(), audioKey, 1.0f, 1.0f);
-                playingAudioKey = audioKey;
-                instance.getLogger().info("播放音乐: " + audioKey + " (立即播放)");
-            } catch (Exception e) {
-                instance.getLogger().warning("无法播放音乐 " + audioKey + ": " + e.getMessage());
-                player.playSound(player.getLocation(), org.bukkit.Sound.BLOCK_NOTE_BLOCK_HARP, 1.0f, 1.0f);
-            }
+            playingAudioKey = audioKey;
+            PlanetLib.getScheduler().runLater(() -> {
+                try {
+                    player.playSound(player.getLocation(), audioKey, 1.0f, 1.0f);
+                } catch (Exception e) {
+                    instance.getLogger().warning("无法播放音乐 " + audioKey + ": " + e.getMessage());
+                }
+            }, 20L); // 1秒 = 20 ticks
         }
 
         player.sendMessage("§a游戏开始！");
@@ -168,25 +175,46 @@ public class GameSession {
         if (state != GameState.PLAYING) {
             return;
         }
+        globalTick++;
 
         // 更新当前时间
         // 铺面offset: 铺面相对音频的时间偏移（正值=铺面延后，负值=铺面提前）
         // 玩家offset: 玩家个人时间偏移（负值=延后音符，正值=提前音符）
-        // 延后1秒: 游戏开始后等待1秒，currentTime从-1开始，1秒后到达0
-        // 这样音符会延后1秒才开始正常显示
-        // 公式: currentTime = 实际时间 - 1秒延后 - 铺面offset + 玩家offset
-        double chartOffset = chart.getMetadata().getOffset() / 1000.0; // 转换为秒
-        double playerOffset = settings.getOffset() / 1000.0; // 转换为秒
+        double chartOffset = chart.getMetadata().getOffset() / 1000.0;
+        double playerOffset = settings.getOffset() / 1000.0;
         double realTime = (System.currentTimeMillis() - startTime) / 1000.0;
-        currentTime = realTime - 1.0 - chartOffset + playerOffset;
+        currentTime = realTime - chartOffset + playerOffset;
 
         // 生成音符
         noteSpawner.update(currentTime);
 
-        // 更新所有音符位置
+        // 更新 easing_motion
+        if (easingMotionManager != null) {
+            easingMotionManager.tick();
+            // 对刚激活 v 缓动（startTime == globalTick）的音符记录当前距离
+            for (org.cubeRhythm.note.NoteEntity e : entityManager.getAllEntities()) {
+                if (e.getEasingType() != null && e.getEasingStartTime() != null
+                        && e.getEasingStartTime() == globalTick && e.getEasingStartDistance() == 0) {
+                    double d = settings.getSpeed() * 20 * (e.getTime() + 1.0 - currentTime) + 4;
+                    e.setEasingStartDistance(d);
+                }
+            }
+        }
+
+        // 更新所有音符位置（音符时间+1秒用于提前渲染，配合音乐延迟1秒播放）
         for (NoteEntity entity : entityManager.getAllEntities()) {
             double noteTime = entity.getTime();
-            double distance = settings.getSpeed() * 20 * (noteTime - currentTime) + 4;
+            double distance;
+
+            // v 缓动：用积分计算当前距离
+            if (entity.getEasingType() != null && entity.getEasingStartTime() != null) {
+                double tElapsed = globalTick - entity.getEasingStartTime();
+                double distanceTraveled = org.cubeRhythm.note.EasingMotionManager.integralSpeed(
+                    entity.getEasingType(), entity.getEasingLambda(), tElapsed);
+                distance = entity.getEasingStartDistance() - distanceTraveled;
+            } else {
+                distance = settings.getSpeed() * 20 * (noteTime + 1.0 - currentTime) + 3;
+            }
 
             NoteRenderer.updateNote(
                     entity,
@@ -204,7 +232,8 @@ public class GameSession {
                 // 判定条件：音符到达判定线附近
                 // 参考Skript: z location <= 4 + speed
                 // 调整：提前2格判定，修正滞后问题
-                boolean inJudgmentZone = distance <= (4.0 + settings.getSpeed() + 2.0);
+                if(entity.getType() == NoteType.HOLD && (entity.getFace() == Face.A || entity.getFace() == Face.D)) distance -= entity.getHoldScaleZ();
+                boolean inJudgmentZone = distance <= (3.0 + settings.getSpeed() + 2.0);
 
                 if (inJudgmentZone) {
                     // 自动演奏模式：自动完美判定所有音符（包括TAP和DOUBLE）
@@ -346,7 +375,7 @@ public class GameSession {
 
                 // 自动移除超过判定线太远的音符
                 // 参考Skript: z location < 4 - speed*4
-                if (distance < (4.0 - settings.getSpeed() * 4.0)) {
+                if (distance < (3.0 - settings.getSpeed() * 4.0)) {
                     if (!entity.isHit()) {
                         // Miss
                         scoreManager.recordJudgment(org.cubeRhythm.judgment.JudgmentResult.MISS);
@@ -513,6 +542,12 @@ public class GameSession {
      * 停止并清理
      */
     public void stop() {
+        if (previewStopTask != null) {
+            previewStopTask.cancel();
+        }
+        if (startGameplayTask != null) {
+            startGameplayTask.cancel();
+        }
         if (gameLoop != null) {
             gameLoop.cancel();
         }
@@ -549,8 +584,14 @@ public class GameSession {
         // 计算时间偏移
         int timingOffset = judgmentManager.calculateTimingOffset(entity, settings.getSpeed());
 
-        // 只在合理的时间窗口内判定（±80ms EXACT窗口）
-        if (Math.abs(timingOffset) <= 80) {
+        // HOLD 音符：前端到达判定线时（timingOffset >= 0）立即判定
+//        boolean shouldJudge = entity.getType() == org.cubeRhythm.note.NoteType.HOLD
+//            ? timingOffset >= 0
+//            : Math.abs(timingOffset) <= 80;
+
+        boolean shouldJudge = entity.getType() == NoteType.HOLD || timingOffset <= 0;
+
+        if (shouldJudge) {
             entity.setHit(true);
 
             // 自动演奏总是EXACT判定
@@ -564,6 +605,11 @@ public class GameSession {
 
             // 在状态栏显示判定结果
             player.sendActionBar(judgment.getDisplayText());
+
+            // 显示光晕特效
+            if (inputHandler != null) {
+                inputHandler.showJudgmentText(entity, judgment, timingOffset);
+            }
 
             // Flick自动转向：如果启用且是Flick音符，触发平滑转向动画
             if (settings.isAutoFlickRotation() && entity.getType() == org.cubeRhythm.note.NoteType.FLICK) {

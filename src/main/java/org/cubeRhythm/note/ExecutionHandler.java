@@ -1,6 +1,7 @@
 package org.cubeRhythm.note;
 
 import org.bukkit.entity.Player;
+import org.cubeRhythm.entity.EntityManager;
 
 import java.util.List;
 import java.util.Map;
@@ -11,34 +12,18 @@ import java.util.Map;
  */
 public class ExecutionHandler {
 
-    /**
-     * 执行 EXECUTION 音符的所有动作
-     * @param player 目标玩家
-     * @param note EXECUTION 音符
-     */
-    public static void executeActions(Player player, Note note) {
-        if (note.getType() != NoteType.EXECUTION || note.getActions() == null) {
-            return;
-        }
-
-        // 遍历并执行所有动作
+    public static void executeActions(Player player, Note note, EntityManager entityManager,
+                                      EasingMotionManager easingMotionManager) {
+        if (note.getType() != NoteType.EXECUTION || note.getActions() == null) return;
         for (Map<String, Object> action : note.getActions()) {
-            executeAction(player, action);
+            executeAction(player, action, entityManager, easingMotionManager);
         }
     }
 
-    /**
-     * 执行单个动作
-     * @param player 目标玩家
-     * @param action 动作配置
-     */
-    private static void executeAction(Player player, Map<String, Object> action) {
+    private static void executeAction(Player player, Map<String, Object> action,
+                                       EntityManager entityManager, EasingMotionManager easingMotionManager) {
         String actionType = (String) action.get("type");
-        Boolean enabled = (Boolean) action.getOrDefault("enabled", true);
-
-        if (!enabled) {
-            return;
-        }
+        if (!((Boolean) action.getOrDefault("enabled", true))) return;
 
         switch (actionType) {
             case "title" -> executeTitle(player, action);
@@ -47,7 +32,26 @@ public class ExecutionHandler {
             case "potion" -> executePotion(player, action);
             case "clear_effects" -> executeClearEffects(player);
             case "remove_potion" -> executeRemovePotion(player, action);
+            case "easing_motion" -> executeEasingMotion(action, entityManager, easingMotionManager);
         }
+    }
+
+    private static void executeEasingMotion(Map<String, Object> action,
+                                             EntityManager entityManager,
+                                             EasingMotionManager easingMotionManager) {
+        if (easingMotionManager == null || entityManager == null) return;
+        Object tagsObj = action.get("bind_tag");
+        if (!(tagsObj instanceof List<?> tagsList)) return;
+
+        List<NoteEntity> targets = new java.util.ArrayList<>();
+        for (Object tag : tagsList) {
+            if (tag instanceof String s) {
+                entityManager.getAllEntities().stream()
+                    .filter(e -> s.equals(e.getTag()))
+                    .forEach(targets::add);
+            }
+        }
+        easingMotionManager.register(action, targets);
     }
 
     private static void executeTitle(Player player, Map<String, Object> action) {

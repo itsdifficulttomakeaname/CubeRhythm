@@ -86,14 +86,17 @@ public class GameHUD {
         hudEntities.add(comboDisplay);
 
         // Difficulty (left side): moved left-down by 1 block (after moving up 2)
-        String difficultyText = chart.getMetadata().getDifficulty().getColor() +
+        String difficultyText = hexToMinecraftColor(chart.getMetadata().getDifficulty().getColor()) +
                 chart.getMetadata().getDifficulty().getName() + " " +
                 chart.getMetadata().getDifficulty().getLevel();
         TextDisplay difficultyDisplay = createHUDText(face, 2.5, BOTTOM_Y, difficultyText);
         hudEntities.add(difficultyDisplay);
 
         // Song name (right side): moved right-down by 1 block (after moving up 2)
-        TextDisplay songDisplay = createHUDText(face, -2.5, BOTTOM_Y, chart.getMetadata().getTitle());
+        String songText = settings.isAutoPlay()
+            ? "§a(AutoPlay) §f" + chart.getMetadata().getTitle() + "§r§f   Player: Computer"
+            : chart.getMetadata().getTitle();
+        TextDisplay songDisplay = createHUDText(face, -2.5, BOTTOM_Y, songText);
         hudEntities.add(songDisplay);
     }
 
@@ -191,5 +194,31 @@ public class GameHUD {
             }
         }
         hudEntities.clear();
+    }
+
+    private String hexToMinecraftColor(String hex) {
+        if (hex == null || !hex.startsWith("#") || hex.length() < 7) return "§f";
+        try {
+            int r = Integer.parseInt(hex.substring(1, 3), 16);
+            int g = Integer.parseInt(hex.substring(3, 5), 16);
+            int b = Integer.parseInt(hex.substring(5, 7), 16);
+            // Minecraft named colors: code, R, G, B
+            int[][] colors = {
+                {0x0, 0, 0, 0}, {0x1, 0, 0, 170}, {0x2, 0, 170, 0}, {0x3, 0, 170, 170},
+                {0x4, 170, 0, 0}, {0x5, 170, 0, 170}, {0x6, 255, 170, 0}, {0x7, 170, 170, 170},
+                {0x8, 85, 85, 85}, {0x9, 85, 85, 255}, {0xa, 85, 255, 85}, {0xb, 85, 255, 255},
+                {0xc, 255, 85, 85}, {0xd, 255, 85, 255}, {0xe, 255, 255, 85}, {0xf, 255, 255, 255}
+            };
+            int best = 0xf;
+            int bestDist = Integer.MAX_VALUE;
+            for (int[] c : colors) {
+                int dr = r - c[1], dg = g - c[2], db = b - c[3];
+                int dist = dr*dr + dg*dg + db*db;
+                if (dist < bestDist) { bestDist = dist; best = c[0]; }
+            }
+            return "§" + Integer.toHexString(best);
+        } catch (NumberFormatException e) {
+            return "§f";
+        }
     }
 }

@@ -1,0 +1,143 @@
+# ===== 音符方块位置（NoteRenderer）=====
+
+# 音符方块 X 位置（含面修正），各面独立
+note_x_w: 0.5
+note_x_a: 1.5
+note_x_s: 0.5
+note_x_d: -2.5
+
+# 音符方块 Y 位置，各面独立
+note_y_w: 1.1
+note_y_a: 1.1
+note_y_s: 1.1
+note_y_d: 1.1
+
+# FLICK 音符 X 位置，各面独立
+flick_x_w: 0.0
+flick_x_a: 2.0
+flick_x_s: 0.0
+flick_x_d: -2.0
+
+# FLICK 音符 Y 位置（所有面）
+flick_y: 1.1
+
+# ===== 光标位置（NoteRenderer）=====
+
+# 光标 Y 偏移，各面独立
+cursor_y_w: 1.6
+cursor_y_a: 1.6
+cursor_y_s: 1.6
+cursor_y_d: 1.6
+
+# 光标固定在判定线的 Z 距离，各面独立
+cursor_z_w: 4.0
+cursor_z_a: 4.0
+cursor_z_s: 4.0
+cursor_z_d: 4.0
+
+# ===== 音符缩放（NoteRenderer calculateScale）=====
+
+# 音符从此距离开始出现
+scale_start_distance: 50.0
+# 判定线距离
+scale_end_distance: 4.0
+# 远处最小缩放
+scale_min: 0.2
+# 判定线最大缩放
+scale_max: 1.0
+
+# 普通音符 scaleZ = scale_z_factor * speed
+scale_z_factor: 0.5
+# HOLD 音符 scaleZ = (60/bpm) * speed * hold_scale_z_factor
+hold_scale_z_factor: 5.0
+
+# ===== 光标视觉（NoteRenderer）=====
+
+# 光标隐藏距离阈值（distance >= 此值时隐藏）
+cursor_hide_distance: 25.0
+# alpha = cursor_alpha_base - (distance - cursor_alpha_dist_ref) * cursor_alpha_factor
+cursor_alpha_base: 100.0
+cursor_alpha_dist_ref: 4.0
+cursor_alpha_factor: 4.0
+# cursorScale = alpha / cursor_scale_divisor
+cursor_scale_divisor: 25.0
+# opacity = alpha * cursor_opacity_multiplier（上限255）
+cursor_opacity_multiplier: 2.0
+# alpha 低于此值时只显示白色
+cursor_alpha_low: 10.0
+# 光标 translation = (-scale * factor, -scale * factor, 0)
+cursor_trans_x_factor: 0.015
+cursor_trans_y_factor: 0.15
+
+# ===== FLICK 视觉（NoteRenderer）=====
+
+# FLICK 方块宽高
+flick_block_size: 5.0
+# FLICK 方块深度
+flick_block_depth: 1.0
+# FLICK 方块居中偏移 X/Y
+flick_center_xy: -2.5
+# FLICK 方块居中偏移 Z
+flick_center_z: -0.5
+# FLICK 箭头 TextDisplay 缩放
+flick_arrow_scale: 15.0
+# FLICK 箭头相对音符的偏移，各面独立
+flick_arrow_x_w: 0.0
+flick_arrow_x_a: 0.0
+flick_arrow_x_s: 0.0
+flick_arrow_x_d: 0.0
+flick_arrow_y_w: -2.5
+flick_arrow_y_a: -2.5
+flick_arrow_y_s: -2.5
+flick_arrow_y_d: -2.5
+flick_arrow_z_w: 0.0
+flick_arrow_z_a: -2.0
+flick_arrow_z_s: 0.0
+flick_arrow_z_d: -2.0
+
+# ===== DOUBLE 连接线（NoteRenderer）=====
+
+# 连接线宽度/深度
+connect_line_width: 0.1
+# 连接线 translation X/Z 偏移（= width/2）
+connect_line_trans_offset: 0.05
+
+# 连接线各面位置偏移（世界坐标 x/y/z）
+connect_line_offset_x_w: 0.0
+connect_line_offset_y_w: 0.0
+connect_line_offset_z_w: 0.0
+connect_line_offset_x_a: 0.0
+connect_line_offset_y_a: 0.0
+connect_line_offset_z_a: 0.0
+connect_line_offset_x_s: 0.0
+connect_line_offset_y_s: 0.0
+connect_line_offset_z_s: 0.0
+connect_line_offset_x_d: 0.0
+connect_line_offset_y_d: 0.0
+connect_line_offset_z_d: 0.0
+
+# ===== 判定特效（InputHandler spawnHitEffect）=====
+
+# 判定文字初始缩放
+hit_effect_scale: 3.0
+# 判定文字 translation = (-scale * factor, -scale * factor, 0)
+hit_effect_trans_x_factor: 0.015
+hit_effect_trans_y_factor: 0.15
+# 每 tick 透明度减少量
+hit_effect_alpha_decay: 24.0
+# 文字缩放衰减系数（每 tick 乘以此值）
+hit_effect_scale_decay: 0.9
+# 文字缩放最小值
+hit_effect_scale_min: 1.0
+# 发光缩放基准值（gs = base - scale2）
+hit_effect_glow_base: 8.0
+# 发光透明度阈值（低于此值用最低透明度）
+hit_effect_glow_alpha_threshold: 40.0
+# 发光最低透明度
+hit_effect_glow_alpha_min: 14.0
+# 动画持续 ticks
+hit_effect_duration: 10
+# EXACT 发光衰减系数
+hit_effect_decay_exact: 0.7
+# JUST 发光衰减系数
+hit_effect_decay_just: 0.5

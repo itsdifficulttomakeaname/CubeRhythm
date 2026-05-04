@@ -21,6 +21,9 @@ commands:
     description: Open the chart selector GUI
     usage: /gui
     aliases: [menu, charts]
+  creload:
+    description: Reload CubeRhythm configuration
+    usage: /creload
 # DEPRECATED: Editor commands disabled - use external tools for chart editing
 #  editor:
 #    description: Enter/exit editor mode
