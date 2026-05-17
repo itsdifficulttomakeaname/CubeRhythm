@@ -5,14 +5,12 @@ import org.cubeRhythm.coordinate.Face;
 import org.cubeRhythm.coordinate.NotePosition;
 import org.cubeRhythm.note.Note;
 import org.cubeRhythm.note.NoteType;
+import org.cubeRhythm.note.event.*;
 
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class ChartLoader {
 
@@ -73,7 +71,22 @@ public class ChartLoader {
                     note.setType(NoteType.valueOf(typeStr));
                     note.setTime(noteTree.getDouble("time"));
                     note.setGlowing(noteTree.getBoolean("glowing", false));
-                    note.setTag(noteTree.getString("tag", ""));
+
+                    // 多标签支持：兼容 "tag": "xxx" 和 "tags": ["a", "b"]
+                    Object tagsObj = noteTree.get("tags");
+                    if (tagsObj instanceof List<?> tagsList) {
+                        Set<String> tagSet = new HashSet<>();
+                        for (Object t : tagsList) {
+                            if (t instanceof String s && !s.isEmpty()) tagSet.add(s);
+                        }
+                        if (!tagSet.isEmpty()) note.setTags(tagSet);
+                    } else {
+                        // 兼容旧格式 "tag": "xxx"
+                        String singleTag = noteTree.getString("tag", "");
+                        if (!singleTag.isEmpty()) {
+                            note.setTag(singleTag);
+                        }
+                    }
 
                     // Handle face (not present for execution notes)
                     if (noteTree.get("face") != null) {
@@ -137,6 +150,19 @@ public class ChartLoader {
                         note.setActions(actionsList);
                     }
 
+                    // Handle inline events (新事件系统)
+                    if (noteTree.get("events") != null) {
+                        Object eventsObj = noteTree.get("events");
+                        if (eventsObj instanceof Map) {
+                            @SuppressWarnings("unchecked")
+                            Map<String, Object> eventsMap = (Map<String, Object>) eventsObj;
+                            EventTrack track = parseEventTrack(eventsMap, note.getTime(), true);
+                            if (!track.isEmpty()) {
+                                note.setEvents(track);
+                            }
+                        }
+                    }
+
                     notes.add(note);
                 } catch (Exception e) {
                     org.cubeRhythm.Main.instance.getLogger().warning("解析音符失败: " + e.getMessage());
@@ -150,7 +176,215 @@ public class ChartLoader {
         org.cubeRhythm.Main.instance.getLogger().info("成功加载 " + notes.size() + " 个音符");
 
         chart.setNotes(notes);
+
+        // 解析 groupEvents（新事件系统）
+        Object groupEventsObj = tree.get("groupEvents");
+        if (groupEventsObj instanceof List<?> groupEventsList) {
+            List<GroupEvent> groupEvents = new ArrayList<>();
+            for (Object geObj : groupEventsList) {
+                if (geObj instanceof Map) {
+                    @SuppressWarnings("unchecked")
+                    Map<String, Object> geMap = (Map<String, Object>) geObj;
+                    GroupEvent ge = parseGroupEvent(geMap);
+                    if (ge != null) {
+                        groupEvents.add(ge);
+                    }
+                }
+            }
+            chart.setGroupEvents(groupEvents);
+            if (!groupEvents.isEmpty()) {
+                org.cubeRhythm.Main.instance.getLogger().info("加载 " + groupEvents.size() + " 个群组事件");
+            }
+        }
+
         return chart;
+    }
+
+    // ── 事件系统解析辅助方法 ──────────────────────────────────────────
+
+    /**
+     * 解析群组事件
+     */
+    private static GroupEvent parseGroupEvent(Map<String, Object> map) {
+        GroupEvent ge = new GroupEvent();
+
+        // 解析 selector
+        Object selectorObj = map.get("selector");
+        if (selectorObj instanceof Map) {
+            @SuppressWarnings("unchecked")
+            Map<String, Object> selectorMap = (Map<String, Object>) selectorObj;
+            ge.setSelector(parseSelector(selectorMap));
+        } else {
+            // 无选择器则命中所有音符
+            ge.setSelector(new Selector());
+        }
+
+        // 解析 events
+        Object eventsObj = map.get("events");
+        if (eventsObj instanceof Map) {
+            @SuppressWarnings("unchecked")
+            Map<String, Object> eventsMap = (Map<String, Object>) eventsObj;
+            ge.setEvents(parseEventTrack(eventsMap, 0, false));
+        } else {
+            return null; // 无事件数据则跳过
+        }
+
+        return ge;
+    }
+
+    /**
+     * 解析选择器
+     */
+    private static Selector parseSelector(Map<String, Object> map) {
+        Selector selector = new Selector();
+
+        // face
+        Object faceObj = map.get("face");
+        if (faceObj != null) {
+            Set<Face> faces = new HashSet<>();
+            if (faceObj instanceof String s) {
+                Face f = Face.fromString(s);
+                if (f != null) faces.add(f);
+            } else if (faceObj instanceof List<?> faceList) {
+                for (Object f : faceList) {
+                    if (f instanceof String s) {
+                        Face face = Face.fromString(s);
+                        if (face != null) faces.add(face);
+                    }
+                }
+            }
+            if (!faces.isEmpty()) selector.setFaces(faces);
+        }
+
+        // type
+        Object typeObj = map.get("type");
+        if (typeObj != null) {
+            Set<NoteType> types = new HashSet<>();
+            if (typeObj instanceof String s) {
+                try { types.add(NoteType.valueOf(s.toUpperCase())); } catch (Exception ignored) {}
+            } else if (typeObj instanceof List<?> typeList) {
+                for (Object t : typeList) {
+                    if (t instanceof String s) {
+                        try { types.add(NoteType.valueOf(s.toUpperCase())); } catch (Exception ignored) {}
+                    }
+                }
+            }
+            if (!types.isEmpty()) selector.setTypes(types);
+        }
+
+        // tag
+        Object tagObj = map.get("tag");
+        if (tagObj != null) {
+            Set<String> tags = new HashSet<>();
+            if (tagObj instanceof String s) {
+                tags.add(s);
+            } else if (tagObj instanceof List<?> tagList) {
+                for (Object t : tagList) {
+                    if (t instanceof String s) tags.add(s);
+                }
+            }
+            if (!tags.isEmpty()) selector.setTags(tags);
+        }
+
+        // timeRange
+        Object timeRangeObj = map.get("timeRange");
+        if (timeRangeObj instanceof List<?> rangeList && rangeList.size() == 2) {
+            try {
+                double start = ((Number) rangeList.get(0)).doubleValue();
+                double end = ((Number) rangeList.get(1)).doubleValue();
+                selector.setTimeRange(new double[]{start, end});
+            } catch (Exception ignored) {}
+        }
+
+        return selector;
+    }
+
+    /**
+     * 解析事件轨道
+     * @param eventsMap 通道名 → 关键帧数组 的 Map
+     * @param noteTime 音符时间（用于 rtime → 绝对秒转换）
+     * @param isRelative 是否使用 rtime（note.events 为 true，groupEvents 为 false）
+     */
+    private static EventTrack parseEventTrack(Map<String, Object> eventsMap, double noteTime, boolean isRelative) {
+        EventTrack track = new EventTrack();
+
+        for (Map.Entry<String, Object> entry : eventsMap.entrySet()) {
+            String channelName = entry.getKey();
+            Object kfsObj = entry.getValue();
+
+            if (!(kfsObj instanceof List<?> kfsList)) continue;
+
+            // "scale" 语法糖：同时设置 SCALE_X/Y/Z
+            if (channelName.equalsIgnoreCase("scale")) {
+                List<Keyframe> keyframes = parseKeyframes(kfsList, noteTime, isRelative);
+                if (!keyframes.isEmpty()) {
+                    track.setChannel(Channel.SCALE_X, keyframes);
+                    track.setChannel(Channel.SCALE_Y, new ArrayList<>(keyframes));
+                    track.setChannel(Channel.SCALE_Z, new ArrayList<>(keyframes));
+                }
+                continue;
+            }
+
+            Channel channel = Channel.fromString(channelName);
+            if (channel == null) continue;
+
+            List<Keyframe> keyframes = parseKeyframes(kfsList, noteTime, isRelative);
+            if (!keyframes.isEmpty()) {
+                track.setChannel(channel, keyframes);
+            }
+        }
+
+        return track;
+    }
+
+    /**
+     * 解析关键帧数组
+     */
+    private static List<Keyframe> parseKeyframes(List<?> kfsList, double noteTime, boolean isRelative) {
+        List<Keyframe> keyframes = new ArrayList<>();
+
+        for (Object kfObj : kfsList) {
+            if (!(kfObj instanceof Map)) continue;
+            @SuppressWarnings("unchecked")
+            Map<String, Object> kfMap = (Map<String, Object>) kfObj;
+
+            Keyframe kf = new Keyframe();
+
+            // 时间解析
+            if (kfMap.containsKey("rtime")) {
+                double rtime = ((Number) kfMap.get("rtime")).doubleValue();
+                kf.setTime(noteTime + rtime);
+            } else if (kfMap.containsKey("time")) {
+                kf.setTime(((Number) kfMap.get("time")).doubleValue());
+            } else {
+                continue; // 无时间字段则跳过
+            }
+
+            // value
+            if (kfMap.containsKey("value")) {
+                Object valObj = kfMap.get("value");
+                if (valObj instanceof Number n) {
+                    kf.setValue(n.doubleValue());
+                } else if (valObj instanceof String s) {
+                    // 材质通道：value 存材质名的 hash，easing 字段存材质名
+                    kf.setValue(s.hashCode());
+                    kf.setEasing(s);
+                    keyframes.add(kf);
+                    continue;
+                }
+            }
+
+            // easing
+            if (kfMap.containsKey("easing")) {
+                kf.setEasing((String) kfMap.get("easing"));
+            }
+
+            keyframes.add(kf);
+        }
+
+        // 确保按时间排序
+        keyframes.sort(Comparator.comparingDouble(Keyframe::getTime));
+        return keyframes;
     }
 
     /**

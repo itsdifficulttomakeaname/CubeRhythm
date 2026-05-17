@@ -30,7 +30,7 @@ public class ResultScreen {
     private final List<TextDisplay> resultPanelEntities = new ArrayList<>();
 
     private final Location centerLoc;
-    private int displayScore = 0;
+    private double displayScore = 0;
 
     public ResultScreen(Player player, Chart chart, ScoreManager scoreManager, PlayerSettings settings) {
         this.player = player;
@@ -86,7 +86,7 @@ public class ResultScreen {
     private void showFullCombo() {
         Location loc = CoordinateSystem.transformCoordinates(
             player.getWorld(), Face.W,
-            0.5, 0.5, 10,
+            0.5, 0.5, 14,
             centerLoc.getX(), centerLoc.getY(), centerLoc.getZ()
         );
 
@@ -96,6 +96,7 @@ public class ResultScreen {
 
         entity.setBillboard(TextDisplay.Billboard.FIXED);
         entity.setAlignment(TextDisplay.TextAlignment.CENTER);
+        entity.setBackgroundColor(org.bukkit.Color.fromARGB(0, 0, 0, 0));
 
         // Initial transformation
         Transformation trans = entity.getTransformation();
@@ -116,7 +117,7 @@ public class ResultScreen {
 
         // Remove entity after animation (30 ticks) + 1 second wait (20 ticks)
         PlanetLib.getScheduler().runLater(() -> {
-            if (entity != null && entity.isValid()) {
+            if (entity.isValid()) {
                 entity.remove();
                 resultPanelEntities.remove(entity);
             }
@@ -129,7 +130,7 @@ public class ResultScreen {
     private void showPerfectPerformance() {
         Location loc = CoordinateSystem.transformCoordinates(
             player.getWorld(), Face.W,
-            0.5, 0.5, 10,
+            0.5, 0.5, 14,
             centerLoc.getX(), centerLoc.getY(), centerLoc.getZ()
         );
 
@@ -159,7 +160,7 @@ public class ResultScreen {
 
         // Remove entity after animation (30 ticks) + 1 second wait (20 ticks)
         PlanetLib.getScheduler().runLater(() -> {
-            if (entity != null && entity.isValid()) {
+            if (entity.isValid()) {
                 entity.remove();
                 resultPanelEntities.remove(entity);
             }
@@ -205,13 +206,13 @@ public class ResultScreen {
 
         Location startLoc = CoordinateSystem.transformCoordinates(
             player.getWorld(), Face.W,
-            -3.5, 0.5, 12,
+            -3.5, 0.5, 16,
             centerLoc.getX(), centerLoc.getY(), centerLoc.getZ()
         );
 
         Location endLoc = CoordinateSystem.transformCoordinates(
             player.getWorld(), Face.W,
-            5.5, 0.5, 12,
+            5.5, 0.5, 16,
             centerLoc.getX(), centerLoc.getY(), centerLoc.getZ()
         );
 
@@ -250,15 +251,16 @@ public class ResultScreen {
      * 显示分数（带计数动画）
      */
     private void showScoreDisplay() {
+        // z=14: behind judgment line, panels don't overlap the note lane
         Location startLoc = CoordinateSystem.transformCoordinates(
             player.getWorld(), Face.W,
-            -7, 2, 10,
+            -7, 2, 14,
             centerLoc.getX(), centerLoc.getY(), centerLoc.getZ()
         );
 
         Location endLoc = CoordinateSystem.transformCoordinates(
             player.getWorld(), Face.W,
-            -1.5, 2, 10,
+            -1.5, 2, 14,
             centerLoc.getX(), centerLoc.getY(), centerLoc.getZ()
         );
 
@@ -282,16 +284,15 @@ public class ResultScreen {
         animateSlide(entity, startLoc, endLoc, 30);
 
         // Animate score counting over 60 ticks
-        final int finalScore = scoreManager.getScore();
-        double tempScore2 = finalScore;
-        double[] tempScore = {tempScore2 * 0.75};
+        final double finalScore = scoreManager.getScore();
+        double[] tempScore = {finalScore * 0.75};
 
         WrappedTask[] taskHolder = new WrappedTask[1];
         final int[] tick = {0};
         taskHolder[0] = PlanetLib.getScheduler().runTimer(() -> {
             tick[0]++;
             tempScore[0] = 0.75 * tempScore[0];
-            displayScore = (int) Math.round(tempScore2 - tempScore[0]);
+            displayScore = finalScore - tempScore[0];
 
             // Format with leading zeros
             String scoreText = formatScoreWithLeadingZeros(displayScore);
@@ -307,15 +308,16 @@ public class ResultScreen {
      * 显示统计信息（带淡入动画）
      */
     private void showStatisticsDisplay() {
+        // z=14: behind judgment line, panels don't overlap the note lane
         Location startLoc = CoordinateSystem.transformCoordinates(
             player.getWorld(), Face.W,
-            -5.5, 2, 10,
+            -5.5, 2, 14,
             centerLoc.getX(), centerLoc.getY(), centerLoc.getZ()
         );
 
         Location endLoc = CoordinateSystem.transformCoordinates(
             player.getWorld(), Face.W,
-            0, 2, 10,
+            0, 2, 14,
             centerLoc.getX(), centerLoc.getY(), centerLoc.getZ()
         );
 
@@ -374,15 +376,16 @@ public class ResultScreen {
                          chart.getMetadata().getDifficulty().getLevel();
         double length = songInfo.length() * 0.12;
 
+        // z=15: behind judgment line, panels don't overlap the note lane
         Location startLoc = CoordinateSystem.transformCoordinates(
             player.getWorld(), Face.W,
-            -4, -2.5, 11,
+            -4, -2.5, 15,
             centerLoc.getX(), centerLoc.getY(), centerLoc.getZ()
         );
 
         Location endLoc = CoordinateSystem.transformCoordinates(
             player.getWorld(), Face.W,
-            0, -2.5, 11,
+            0, -2.5, 15,
             centerLoc.getX(), centerLoc.getY(), centerLoc.getZ()
         );
 
@@ -435,8 +438,8 @@ public class ResultScreen {
     /**
      * 格式化分数，显示前导零
      */
-    private String formatScoreWithLeadingZeros(int score) {
-        String scoreStr = String.valueOf(score);
+    private String formatScoreWithLeadingZeros(double score) {
+        String scoreStr = String.valueOf(Math.round(score));
         int leadingZeros = 7 - scoreStr.length();
 
         if (leadingZeros <= 0) {
@@ -462,7 +465,7 @@ public class ResultScreen {
     }
 
     private String calculateRank() {
-        int score = scoreManager.getScore();
+        double score = scoreManager.getScore();
         if (scoreManager.isFullPerfect()) return "SSS+";
         if (score >= 990000) return "SSS";
         if (score >= 980000) return "SS";

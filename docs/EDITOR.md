@@ -1,55 +1,190 @@
-# 游戏内编辑器（已废弃）
+# 外部铺面编辑器设计指南
 
-> **⚠️ 废弃说明**：游戏内编辑器已于 2026-02-17 废弃，所有类标记 `@Deprecated`，功能在 `Main.java` 中已禁用。
-> **推荐使用外部工具编辑铺面**（Web 编辑器或桌面应用）。
+> 状态：设计指南 v0.2  
+> 配合：[NOTE_MOVEMENT_DESIGN.md](./NOTE_MOVEMENT_DESIGN.md)  
+> 撰写日期：2026-05-16
 
-## 废弃原因
+游戏内编辑器已于 2026-02-17 废弃（射线投射、预览实体、撤销/重做、时间精度等问题在 Minecraft 输入环境下都难以做好），随后的事件流方案（关键帧 + 多通道）进一步加大了可视化编辑的复杂度。本文档面向**外部编辑器**作者（Web 或桌面端），描述功能范围、UI 结构、数据契约。
 
-1. 多面坐标转换逻辑复杂，容易出错
-2. 射线投射边界情况处理困难
-3. 预览光标频繁创建/删除实体，性能开销大
-4. Minecraft 输入系统不适合精确编辑，缺少撤销/重做
-5. 维护成本高
+---
 
-## 推荐替代方案
-
-**外部 Web 编辑器（推荐）**：React + Canvas/WebGL + Web Audio API，支持波形可视化、撤销/重做、批量编辑。
-
-**桌面应用**：Electron 或 Tauri，原生性能，完整文件系统访问。
-
-工作流程：外部工具编辑 → 保存为 JSON → 放入 `plugins/CubeRhythm/` → 游戏内 `/play` 测试。
-
-## 已废弃的命令
-
-- ~~`/editor new <chartId>`~~ / ~~`/editor load <chartId>`~~
-- ~~`/editor save`~~ / ~~`/editor bpm`~~ / ~~`/editor pretime`~~ / ~~`/editor speed`~~
-- ~~`/step <n>`~~ / ~~`/b <beat>`~~
-
-## 代码结构（仅供参考）
-
-`org.cubeRhythm.editor` 包中的类（均已 `@Deprecated`）：
-
-| 类 | 职责 |
-|----|------|
-| `EditorSession` | 单玩家编辑状态（tick位置、音符类型、BPM等） |
-| `EditorManager` | 全局会话管理单例 |
-| `EditorNote` | 编辑器专用音符数据结构 |
-| `EditorFileUtil` | JSON 序列化/反序列化，实时自动保存 |
-| `EditorCommand` | `/editor` 命令处理 |
-| `StepCommand` / `BeatCommand` | `/step` 和 `/b` 命令 |
-| `EditorListener` | 鼠标滚轮导航（`PlayerItemHeldEvent`）、热键 |
-| `EditorNoteRenderer` | 渲染当前时间 ±5s 内的音符 |
-| `EditorUpdateTask` | 每 2 tick 更新预览光标和 ActionBar |
-| `EditorPreviewCursor` | 射线投射计算光标位置，显示半透明预览实体 |
-| `EditorFaceDetector` | 自动检测玩家视线指向哪个判定面 |
-
-## 时间系统（参考）
+## 1. 工作流定位
 
 ```
-time(s) = tick / stepLength × (60 / bpm) + preTime
-beat    = floor(tick / stepLength) + 1
+外部编辑器（Web / Desktop）
+    ↓ 导出 JSON
+plugins/CubeRhythm/{chartId}.json
+    ↓ /play 测试
+游戏内运行
 ```
 
-## DOUBLE 音符放置流程（参考）
+编辑器和游戏完全解耦。编辑器只负责"产出符合 chart format 的 JSON"，游戏只负责"读 JSON 并播放"。两者的唯一契约是 `CHART_FORMAT.md` 定义的格式。
 
-两步放置：右键第一个位置 → 右键第二个位置完成；左键或切换类型取消。
+---
+
+## 2. 推荐技术栈
+
+| 方向       | 选型                                                             | 理由                  |
+|----------|----------------------------------------------------------------|---------------------|
+| **Web**  | React/Vue + Canvas / WebGL（Pixi.js / Three.js） + Web Audio API | 跨平台、零安装、波形可视化天然支持   |
+| **桌面**   | Electron / Tauri                                               | 原生文件系统访问；Tauri 体积更小 |
+| **底层渲染** | 2D Canvas 即可。立方体玩法虽是 3D，但编辑视图按"四面摊开"为 2D 网格更直观                 |
+
+如果只做一个，优先 Web 端：维护和分发成本最低。
+
+---
+
+## 3. 必须支持的核心功能
+
+### 3.1 时间轴
+
+- 整谱时间轴：以秒为主刻度，可切到拍刻度（基于 metadata 的 BPM）。
+- 拍线（beat line）按 1/4、1/8、1/16 等切换显示密度。
+- 音频波形（waveform）背景：用 Web Audio API 的 `AudioBuffer.getChannelData()` 离屏渲染成 PNG 缓存。
+- 当前播放头（playhead）双向同步：拖动时间轴 ↔ 音频跳转。
+
+> **拍（beat）**：音乐节奏的基本单位，一个 4/4 拍的小节有 4 拍。  
+> **细分（subdivision）**：把一拍再均分成 N 等份，常见 1/8、1/16，便于精确放置音符。
+
+### 3.2 四面网格
+
+把 W / A / S / D 四个判定面摊平排列，每个面是一个 7×7 网格（x ∈ [−3, 3]，y ∈ [−3, 3]）：
+
+```
+[ W 面 ]   [ A 面 ]   [ S 面 ]   [ D 面 ]
+ ┌───┐    ┌───┐    ┌───┐    ┌───┐
+ │ ◯ │    │   │    │   │    │   │
+ └───┘    └───┘    └───┘    └───┘
+```
+
+- 鼠标点击网格交叉点 = 在该面、该位置放音符。
+- 时间通过时间轴的播放头确定（"在当前时刻放一个 tap"）。
+- DOUBLE 类型支持单次操作放两个位置（按住 Shift 拖动框选两点）。
+
+### 3.3 音符工具栏
+
+- 类型切换：tap / hold / drag / flick / double / execution / fake_*。
+- HOLD 长度可拖动调整尾部。
+- FLICK 的 `turn`（left / right）通过工具栏切换或快捷键。
+- 选中后右侧面板编辑详细字段（face、position、glowing、tag）。
+
+### 3.4 事件编辑器（核心新增）
+
+> **事件（event）**：附加在音符或群组上的、随时间变化的属性曲线。详见 [NOTE_MOVEMENT_DESIGN.md](./NOTE_MOVEMENT_DESIGN.md)。
+
+事件编辑器是最复杂的部分，建议参考 After Effects / Unity Animation Window 的"曲线视图"：
+
+- **左侧通道列表**：x / y / z / alpha / scale / rotate / colorR/G/B/A 等。每个通道一行。
+- **右侧曲线视图**：横轴时间，纵轴 value，关键帧（keyframe）显示为可拖动的圆点。
+- **关键帧检查器**：选中单个关键帧后，弹出面板编辑 `time / rtime / value / easing`。
+- **缓动选择**：每个关键帧右侧显示"出口缓动"，点击切到下一种（linear / sineOut / cubicIn 等）。
+- **预览**：在四面网格视图上叠加当前时间点的音符位置（含事件应用后的偏移）。
+
+### 3.5 群组事件
+
+- 单独的"群组事件（groupEvents）"标签页。
+- 选择器（selector）以可视化表单填写：face 多选、type 多选、tag 输入、timeRange 双滑块。
+- "命中预览"：在主时间轴上高亮被命中的音符，便于编谱者确认选择器写对了。
+
+### 3.6 标准编辑能力
+
+- **撤销 / 重做**：用 immutable 数据结构（Immer / Immutable.js）或命令模式（Command Pattern）实现。
+- **复制 / 粘贴**：按时间偏移粘贴整段音符或事件。
+- **批量编辑**：框选多音符，统一改 face / tag / 偏移时间。
+- **吸附（snap）**：放置音符时自动吸到最近拍线。
+- **快捷键**：空格播放、左右箭头按 1/16 拍移动、Ctrl+Z/Y 撤销重做。
+
+### 3.7 实时预览
+
+- "试播放（play preview）"：从当前播放头开始按真实速度播放音频，并按设定的 `speed` 渲染音符在四面网格上的运动（带事件求值）。
+- 不必做立方体 3D 视图——四面摊平 + 时间轴模拟即可，目的是在导出前发现轨迹问题。
+
+---
+
+## 4. 数据契约
+
+### 4.1 输入 / 输出
+
+- **输入**：音频文件（推荐 OGG，与 Minecraft 资源包一致）+ 用户操作。
+- **输出**：标准 chart JSON（见 `CHART_FORMAT.md`）。
+
+### 4.2 编辑期附加字段
+
+编辑器在导出的 JSON 里可写入 `_editor` 字段保存自身状态（视图缩放、最近选中音符 id、自定义颜色等）：
+
+```json
+{ "type": "tap", "time": 1.5, ..., "_editor": { "color": "#ff8800", "note_id": "n_001" } }
+```
+
+游戏运行时**应忽略所有以下划线开头的字段**。这条契约写进 `ChartLoader` 的解析逻辑里。
+
+### 4.3 严格校验
+
+导出时编辑器应做以下校验，不通过禁止导出：
+
+- 时间字段不为负、不超过 `duration`。
+- `position` 落在 [−3, 3] 范围。
+- 事件关键帧时间单调递增。
+- 选择器至少有一个非空字段（避免命中所有音符）。
+- 引用的 `audio` key 与 metadata 一致。
+
+---
+
+## 5. UI 布局示意
+
+```
+┌────────────────────────────────────────────────────────┐
+│ 顶部工具栏：保存 撤销 重做 试播 速度× ...              │
+├──────────┬─────────────────────────────┬──────────────┤
+│          │  四面网格视图                │              │
+│ 音符工具  │  [W]  [A]  [S]  [D]         │  右侧检查器  │
+│ 类型选择  │   ◯    ·    ·    ·          │  - 选中对象  │
+│          │   ·    ◯    ·    ·          │    详情      │
+│ 群组事件  │                             │  - 事件曲线  │
+│ 列表      │                             │    编辑      │
+├──────────┴─────────────────────────────┴──────────────┤
+│  时间轴 + 波形：[========◆========]                    │
+│  事件曲线（按通道展开）                                  │
+└────────────────────────────────────────────────────────┘
+```
+
+---
+
+## 6. 实现阶段建议
+
+| 阶段 | 内容                                     |
+|----|----------------------------------------|
+| M0 | 加载/保存 chart JSON；时间轴 + 波形 + 播放控制       |
+| M1 | 四面网格放置基础音符（tap/hold/drag/flick/double） |
+| M2 | 试播放（speed / offset 模拟，但不含事件）           |
+| M3 | 单音符 `events` 编辑（曲线视图、关键帧拖动、缓动选择）       |
+| M4 | `groupEvents` 编辑（选择器表单、命中预览）           |
+| M5 | 撤销/重做、批量操作、快捷键、吸附                      |
+| M6 | 校验导出、`_editor` 元数据、模板 / 收藏夹            |
+
+---
+
+## 7. 已废弃的游戏内编辑器（参考）
+
+`org.cubeRhythm.editor` 包中的所有类标记 `@Deprecated`，命令在 `Main.java` 中注释掉。代码保留供参考，不再维护。
+
+废弃时的核心类：
+
+| 类                     | 职责                         |
+|-----------------------|----------------------------|
+| `EditorSession`       | 单玩家编辑状态（tick位置、音符类型、BPM 等） |
+| `EditorManager`       | 全局会话管理单例                   |
+| `EditorFileUtil`      | JSON 序列化/反序列化，实时自动保存       |
+| `EditorPreviewCursor` | 射线投射计算光标位置，显示半透明预览实体       |
+| `EditorFaceDetector`  | 自动检测玩家视线指向哪个判定面            |
+
+废弃命令：`/editor`、`/editor new <id>`、`/editor load <id>`、`/editor save`、`/editor bpm`、`/editor pretime`、`/editor speed`、`/step <n>`、`/b <beat>`。
+
+时间换算（参考）：
+
+```
+time(秒) = tick / stepLength × (60 / bpm) + preTime
+beat     = floor(tick / stepLength) + 1
+```
+
+DOUBLE 放置（参考）：右键放第一个位置 → 右键放第二个 → 完成；左键或切类型取消。

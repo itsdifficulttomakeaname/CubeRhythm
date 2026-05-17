@@ -12,16 +12,15 @@ import java.util.Map;
  */
 public class ExecutionHandler {
 
-    public static void executeActions(Player player, Note note, EntityManager entityManager,
-                                      EasingMotionManager easingMotionManager) {
+    public static void executeActions(Player player, Note note, EntityManager entityManager) {
         if (note.getType() != NoteType.EXECUTION || note.getActions() == null) return;
         for (Map<String, Object> action : note.getActions()) {
-            executeAction(player, action, entityManager, easingMotionManager);
+            executeAction(player, action, entityManager);
         }
     }
 
     private static void executeAction(Player player, Map<String, Object> action,
-                                       EntityManager entityManager, EasingMotionManager easingMotionManager) {
+                                       EntityManager entityManager) {
         String actionType = (String) action.get("type");
         if (!((Boolean) action.getOrDefault("enabled", true))) return;
 
@@ -32,26 +31,8 @@ public class ExecutionHandler {
             case "potion" -> executePotion(player, action);
             case "clear_effects" -> executeClearEffects(player);
             case "remove_potion" -> executeRemovePotion(player, action);
-            case "easing_motion" -> executeEasingMotion(action, entityManager, easingMotionManager);
+            // easing_motion 已移除，由新事件系统 (note.events / groupEvents) 替代
         }
-    }
-
-    private static void executeEasingMotion(Map<String, Object> action,
-                                             EntityManager entityManager,
-                                             EasingMotionManager easingMotionManager) {
-        if (easingMotionManager == null || entityManager == null) return;
-        Object tagsObj = action.get("bind_tag");
-        if (!(tagsObj instanceof List<?> tagsList)) return;
-
-        List<NoteEntity> targets = new java.util.ArrayList<>();
-        for (Object tag : tagsList) {
-            if (tag instanceof String s) {
-                entityManager.getAllEntities().stream()
-                    .filter(e -> s.equals(e.getTag()))
-                    .forEach(targets::add);
-            }
-        }
-        easingMotionManager.register(action, targets);
     }
 
     private static void executeTitle(Player player, Map<String, Object> action) {

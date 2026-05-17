@@ -11,7 +11,12 @@
       "Bash(dir:*)",
       "Bash(javap:*)",
       "Bash(ls:*)",
-      "Bash(grep:*)"
+      "Bash(grep:*)",
+      "Read(//mnt/c/Users/zxy/IdeaProjects/**)",
+      "Bash(ls mvnw*)",
+      "Bash(ls .mvn)",
+      "Bash(which mvn *)",
+      "Bash(cmd.exe /c \"where mvn\")"
     ]
   }
 }

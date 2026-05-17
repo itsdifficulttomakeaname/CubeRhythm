@@ -19,6 +19,11 @@ public class GUICommand implements CommandExecutor {
             return true;
         }
 
+        // 清除结算界面
+        if (Main.instance.getCurrentSession() != null && Main.instance.getCurrentSession().getResultScreen() != null) {
+            Main.instance.getCurrentSession().getResultScreen().cleanupVisualPanel();
+        }
+
         // 打开谱面选择GUI
         Main.instance.getGuiListener().getChartSelector().open(player);
 

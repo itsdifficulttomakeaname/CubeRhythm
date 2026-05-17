@@ -1,0 +1,369 @@
+{
+  "version": "1.0.0",
+  "metadata": {
+    "id": "execution_test",
+    "title": "Execution Test",
+    "artist": "Test",
+    "charter": "Claude",
+    "difficulty": {
+      "name": "Test",
+      "level": 1,
+      "color": "AQUA"
+    },
+    "audio": "",
+    "duration": 42,
+    "offset": 0,
+    "bpm": 120
+  },
+  "notes": [
+    {
+      "type": "execution",
+      "time": 1.0,
+      "actions": [
+        {
+          "type": "title",
+          "enabled": true,
+          "title": "§fExecution Test",
+          "subtitle": "§7Testing all execution actions",
+          "fadeIn": 10,
+          "stay": 20,
+          "fadeOut": 10
+        }
+      ]
+    },
+    {
+      "type": "execution",
+      "time": 2.5,
+      "actions": [
+        {
+          "type": "actionbar",
+          "enabled": true,
+          "text": "§bActionBar Test - This message appears above hotbar"
+        }
+      ]
+    },
+    {
+      "type": "execution",
+      "time": 4.0,
+      "actions": [
+        {
+          "type": "chat",
+          "enabled": true,
+          "message": "§aChat Test - This message appears in chat"
+        }
+      ]
+    },
+    {
+      "type": "execution",
+      "time": 5.5,
+      "actions": [
+        {
+          "type": "draw_text",
+          "enabled": true,
+          "face": "w",
+          "position": {"x": 0, "y": 0},
+          "scale": 4,
+          "opacity": 255,
+          "duration": 40,
+          "text": "§fHello World"
+        }
+      ]
+    },
+    {
+      "type": "execution",
+      "time": 7.0,
+      "actions": [
+        {
+          "type": "draw_line",
+          "enabled": true,
+          "face": "w",
+          "from": {"x": -3, "y": 0},
+          "to": {"x": 3, "y": 0},
+          "duration": 40
+        }
+      ]
+    },
+    {
+      "type": "execution",
+      "time": 8.5,
+      "actions": [
+        {
+          "type": "potion",
+          "enabled": true,
+          "effectType": "SPEED",
+          "duration": 100,
+          "amplifier": 1,
+          "ambient": false,
+          "particles": true,
+          "icon": true
+        }
+      ]
+    },
+    {
+      "type": "execution",
+      "time": 10.0,
+      "actions": [
+        {
+          "type": "remove_potion",
+          "enabled": true,
+          "effectType": "SPEED"
+        }
+      ]
+    },
+    {
+      "type": "execution",
+      "time": 11.5,
+      "actions": [
+        {
+          "type": "potion",
+          "enabled": true,
+          "effectType": "SPEED",
+          "duration": 100,
+          "amplifier": 2,
+          "ambient": false,
+          "particles": true,
+          "icon": true
+        },
+        {
+          "type": "potion",
+          "enabled": true,
+          "effectType": "JUMP",
+          "duration": 100,
+          "amplifier": 1,
+          "ambient": false,
+          "particles": true,
+          "icon": true
+        }
+      ]
+    },
+    {
+      "type": "execution",
+      "time": 13.0,
+      "actions": [
+        {
+          "type": "clear_effects",
+          "enabled": true
+        }
+      ]
+    },
+    {
+      "type": "execution",
+      "time": 14.5,
+      "actions": [
+        {
+          "type": "blind",
+          "enabled": true,
+          "duration": 40
+        }
+      ]
+    },
+    {
+      "type": "execution",
+      "time": 16.5,
+      "actions": [
+        {
+          "type": "change_glow_color",
+          "enabled": true,
+          "bind_tag": ["glow1"],
+          "duration": 40,
+          "color": {"r": 255, "g": 0, "b": 0, "a": 255}
+        }
+      ]
+    },
+    {
+      "type": "tap",
+      "time": 18.5,
+      "face": "w",
+      "position": {"x": 0, "y": 0},
+      "glowing": true,
+      "tag": "glow1"
+    },
+    {
+      "type": "execution",
+      "time": 19.5,
+      "actions": [
+        {
+          "type": "hide_note",
+          "enabled": true,
+          "bind_tag": ["hide1"],
+          "end_time": 21.0
+        }
+      ]
+    },
+    {
+      "type": "tap",
+      "time": 21.5,
+      "face": "w",
+      "position": {"x": 0, "y": 1},
+      "glowing": false,
+      "tag": "hide1"
+    },
+    {
+      "type": "execution",
+      "time": 23.0,
+      "actions": [
+        {
+          "type": "easing_motion",
+          "enabled": true,
+          "bind_tag": ["ease_linear"],
+          "segments": [
+            {
+              "keep": 30,
+              "x": [{"name": "1"}],
+              "y": [{"name": "0"}]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "tap",
+      "time": 25.0,
+      "face": "w",
+      "position": {"x": -2, "y": 0},
+      "glowing": true,
+      "tag": "ease_linear"
+    },
+    {
+      "type": "execution",
+      "time": 26.0,
+      "actions": [
+        {
+          "type": "easing_motion",
+          "enabled": true,
+          "bind_tag": ["ease_sin"],
+          "segments": [
+            {
+              "keep": 30,
+              "x": [{"name": "sin", "freq": 2, "ampl": 0.5}],
+              "y": [{"name": "0"}]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "tap",
+      "time": 28.0,
+      "face": "w",
+      "position": {"x": 0, "y": 0},
+      "glowing": true,
+      "tag": "ease_sin"
+    },
+    {
+      "type": "execution",
+      "time": 29.0,
+      "actions": [
+        {
+          "type": "easing_motion",
+          "enabled": true,
+          "bind_tag": ["ease_expo_v"],
+          "segments": [
+            {
+              "keep": 30,
+              "x": [{"name": "0"}],
+              "y": [{"name": "0"}],
+              "v": [{"name": "expo", "lambda": 0.05}]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "tap",
+      "time": 31.0,
+      "face": "w",
+      "position": {"x": 0, "y": 0},
+      "glowing": true,
+      "tag": "ease_expo_v"
+    },
+    {
+      "type": "execution",
+      "time": 32.0,
+      "actions": [
+        {
+          "type": "easing_motion",
+          "enabled": true,
+          "bind_tag": ["ease_multi"],
+          "segments": [
+            {
+              "keep": 15,
+              "x": [{"name": "sin", "freq": 3, "ampl": 1}],
+              "y": [{"name": "1"}]
+            },
+            {
+              "keep": 15,
+              "x": [{"name": "expo", "lambda": 2}],
+              "y": [{"name": "0"}]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "tap",
+      "time": 34.0,
+      "face": "w",
+      "position": {"x": 0, "y": -1},
+      "glowing": true,
+      "tag": "ease_multi"
+    },
+    {
+      "type": "execution",
+      "time": 35.0,
+      "actions": [
+        {
+          "type": "easing_motion",
+          "enabled": true,
+          "bind_tag": ["ease_inverse"],
+          "segments": [
+            {
+              "keep": 30,
+              "x": [{"name": "inverse", "lambda": 1}],
+              "y": [{"name": "0"}]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "tap",
+      "time": 37.0,
+      "face": "w",
+      "position": {"x": -1, "y": 0},
+      "glowing": true,
+      "tag": "ease_inverse"
+    },
+    {
+      "type": "execution",
+      "time": 38.0,
+      "actions": [
+        {
+          "type": "easing_motion",
+          "enabled": true,
+          "bind_tag": ["ease_power"],
+          "segments": [
+            {
+              "keep": 15,
+              "x": [{"name": "2"}],
+              "y": [{"name": "0"}]
+            },
+            {
+              "keep": 15,
+              "x": [{"name": "3"}],
+              "y": [{"name": "0"}]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "tap",
+      "time": 40.0,
+      "face": "w",
+      "position": {"x": -1, "y": 1},
+      "glowing": true,
+      "tag": "ease_power"
+    }
+  ]
+}

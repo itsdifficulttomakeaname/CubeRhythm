@@ -1,0 +1,537 @@
+{
+  "version": "1.0.0",
+  "metadata": {
+    "id": "event_test_full",
+    "title": "Event Test - Combined",
+    "artist": "Test",
+    "charter": "Auto",
+    "difficulty": {
+      "name": "Expert",
+      "level": 10,
+      "color": "#FF5555"
+    },
+    "audio": "",
+    "duration": 60,
+    "offset": 0,
+    "bpm": 140
+  },
+  "groupEvents": [
+    {
+      "selector": {
+        "tag": "spiral"
+      },
+      "events": {
+        "x": [
+          {"time": 4.0, "value": 0, "easing": "linear"},
+          {"time": 5.0, "value": 2, "easing": "sineOut"},
+          {"time": 6.0, "value": 0, "easing": "sineInOut"},
+          {"time": 7.0, "value": -2, "easing": "sineInOut"},
+          {"time": 8.0, "value": 0, "easing": "sineIn"}
+        ],
+        "y": [
+          {"time": 4.0, "value": 0, "easing": "linear"},
+          {"time": 5.0, "value": 0, "easing": "linear"},
+          {"time": 6.0, "value": 2, "easing": "sineOut"},
+          {"time": 7.0, "value": 0, "easing": "sineInOut"},
+          {"time": 8.0, "value": -2, "easing": "sineIn"}
+        ],
+        "rotate": [
+          {"time": 4.0, "value": 0, "easing": "linear"},
+          {"time": 8.0, "value": 720, "easing": "linear"}
+        ]
+      }
+    },
+
+    {
+      "selector": {
+        "tag": "drop"
+      },
+      "events": {
+        "z": [
+          {"time": 18.0, "value": 5, "easing": "linear"},
+          {"time": 19.5, "value": 0, "easing": "expoOut"}
+        ],
+        "scale": [
+          {"time": 18.0, "value": 0.2, "easing": "linear"},
+          {"time": 19.5, "value": 1.0, "easing": "backOut"}
+        ],
+        "alpha": [
+          {"time": 18.0, "value": 0, "easing": "linear"},
+          {"time": 18.5, "value": 1, "easing": "linear"}
+        ]
+      }
+    },
+
+    {
+      "selector": {
+        "tag": "color_group"
+      },
+      "events": {
+        "color_r": [
+          {"time": 28.0, "value": 255, "easing": "linear"},
+          {"time": 30.0, "value": 0, "easing": "linear"},
+          {"time": 32.0, "value": 255, "easing": "linear"}
+        ],
+        "color_g": [
+          {"time": 28.0, "value": 0, "easing": "linear"},
+          {"time": 30.0, "value": 255, "easing": "linear"},
+          {"time": 32.0, "value": 0, "easing": "linear"}
+        ],
+        "color_b": [
+          {"time": 28.0, "value": 0, "easing": "linear"},
+          {"time": 30.0, "value": 0, "easing": "linear"},
+          {"time": 32.0, "value": 255, "easing": "linear"}
+        ]
+      }
+    }
+  ],
+  "notes": [
+    {
+      "type": "execution",
+      "time": 1.0,
+      "actions": [{"type": "chat", "enabled": true, "message": "§c[Combined 1] §fgroupEvent螺旋: 音符在spiral结束后到达，验证事件已完成不影响位置"}]
+    },
+    {
+      "type": "tap",
+      "time": 9.0,
+      "face": "w",
+      "position": {"x": 0, "y": 0},
+      "glowing": false,
+      "tag": "spiral"
+    },
+    {
+      "type": "tap",
+      "time": 9.5,
+      "face": "w",
+      "position": {"x": 1, "y": 0},
+      "glowing": false,
+      "tag": "spiral"
+    },
+    {
+      "type": "tap",
+      "time": 10.0,
+      "face": "w",
+      "position": {"x": -1, "y": 0},
+      "glowing": false,
+      "tag": "spiral"
+    },
+    {
+      "type": "tap",
+      "time": 10.5,
+      "face": "w",
+      "position": {"x": 0, "y": 1},
+      "glowing": false,
+      "tag": "spiral"
+    },
+    {
+      "type": "tap",
+      "time": 11.0,
+      "face": "w",
+      "position": {"x": 0, "y": -1},
+      "glowing": false,
+      "tag": "spiral"
+    },
+
+    {
+      "type": "execution",
+      "time": 12.0,
+      "actions": [{"type": "chat", "enabled": true, "message": "§c[Combined 2] §finline事件: Y偏移从上方滑入 + scale从大变小"}]
+    },
+    {
+      "type": "tap",
+      "time": 14.0,
+      "face": "w",
+      "position": {"x": 0, "y": 0},
+      "glowing": false,
+      "tag": "",
+      "events": {
+        "y": [
+          {"rtime": -2.0, "value": 2, "easing": "linear"},
+          {"rtime": 0.0, "value": 0, "easing": "quadOut"}
+        ]
+      }
+    },
+    {
+      "type": "tap",
+      "time": 15.0,
+      "face": "w",
+      "position": {"x": 0, "y": 0},
+      "glowing": false,
+      "tag": "",
+      "events": {
+        "y": [
+          {"rtime": -2.0, "value": -2, "easing": "linear"},
+          {"rtime": 0.0, "value": 0, "easing": "quadOut"}
+        ]
+      }
+    },
+    {
+      "type": "tap",
+      "time": 16.0,
+      "face": "w",
+      "position": {"x": 0, "y": 0},
+      "glowing": false,
+      "tag": "",
+      "events": {
+        "scale": [
+          {"rtime": -1.5, "value": 2.0, "easing": "linear"},
+          {"rtime": 0.0, "value": 1.0, "easing": "expoOut"}
+        ]
+      }
+    },
+
+    {
+      "type": "execution",
+      "time": 17.0,
+      "actions": [{"type": "chat", "enabled": true, "message": "§c[Combined 3] §fgroupEvent drop入场: z远处飞入 + scale从小变大 + alpha淡入 (音符在19.5后到达)"}]
+    },
+    {
+      "type": "tap",
+      "time": 20.0,
+      "face": "w",
+      "position": {"x": -2, "y": 1},
+      "glowing": false,
+      "tag": "drop"
+    },
+    {
+      "type": "tap",
+      "time": 20.0,
+      "face": "w",
+      "position": {"x": -1, "y": 0},
+      "glowing": false,
+      "tag": "drop"
+    },
+    {
+      "type": "tap",
+      "time": 20.0,
+      "face": "w",
+      "position": {"x": 0, "y": -1},
+      "glowing": false,
+      "tag": "drop"
+    },
+    {
+      "type": "tap",
+      "time": 20.0,
+      "face": "w",
+      "position": {"x": 1, "y": 0},
+      "glowing": false,
+      "tag": "drop"
+    },
+    {
+      "type": "tap",
+      "time": 20.0,
+      "face": "w",
+      "position": {"x": 2, "y": 1},
+      "glowing": false,
+      "tag": "drop"
+    },
+
+    {
+      "type": "execution",
+      "time": 21.0,
+      "actions": [{"type": "chat", "enabled": true, "message": "§c[Combined 4] §finline旋转 + 材质切换"}]
+    },
+    {
+      "type": "tap",
+      "time": 23.0,
+      "face": "w",
+      "position": {"x": 0, "y": 0},
+      "glowing": false,
+      "tag": "",
+      "events": {
+        "rotate": [
+          {"rtime": -2.0, "value": 0, "easing": "linear"},
+          {"rtime": 0.0, "value": 360, "easing": "cubicOut"}
+        ]
+      }
+    },
+    {
+      "type": "tap",
+      "time": 24.0,
+      "face": "w",
+      "position": {"x": 1, "y": 0},
+      "glowing": false,
+      "tag": "",
+      "events": {
+        "rotate": [
+          {"rtime": -2.0, "value": 0, "easing": "linear"},
+          {"rtime": 0.0, "value": -360, "easing": "cubicOut"}
+        ],
+        "material": [
+          {"rtime": -2.0, "value": "GOLD_BLOCK"},
+          {"rtime": -0.5, "value": "LIGHT_BLUE_CONCRETE"}
+        ]
+      }
+    },
+
+    {
+      "type": "execution",
+      "time": 26.0,
+      "actions": [{"type": "chat", "enabled": true, "message": "§c[Combined 5] §fgroupEvent颜色 + inline位置+缩放 (音符在32.0后到达)"}]
+    },
+    {
+      "type": "tap",
+      "time": 33.0,
+      "face": "w",
+      "position": {"x": -1, "y": 0},
+      "glowing": true,
+      "tag": "color_group",
+      "events": {
+        "x": [
+          {"rtime": -2.0, "value": -2, "easing": "linear"},
+          {"rtime": 0.0, "value": 0, "easing": "sineInOut"}
+        ]
+      }
+    },
+    {
+      "type": "tap",
+      "time": 34.0,
+      "face": "w",
+      "position": {"x": 0, "y": 0},
+      "glowing": true,
+      "tag": "color_group",
+      "events": {
+        "scale": [
+          {"rtime": -1.5, "value": 0.5, "easing": "linear"},
+          {"rtime": -0.5, "value": 1.5, "easing": "backOut"},
+          {"rtime": 0.0, "value": 1.0, "easing": "quadIn"}
+        ]
+      }
+    },
+    {
+      "type": "tap",
+      "time": 35.0,
+      "face": "w",
+      "position": {"x": 1, "y": 0},
+      "glowing": true,
+      "tag": "color_group",
+      "events": {
+        "x": [
+          {"rtime": -2.0, "value": 2, "easing": "linear"},
+          {"rtime": 0.0, "value": 0, "easing": "sineInOut"}
+        ]
+      }
+    },
+    {
+      "type": "tap",
+      "time": 36.0,
+      "face": "w",
+      "position": {"x": 0, "y": 1},
+      "glowing": true,
+      "tag": "color_group"
+    },
+
+    {
+      "type": "execution",
+      "time": 37.0,
+      "actions": [{"type": "chat", "enabled": true, "message": "§c[Combined 6] §f终极测试: group(color已结束) + inline(x+scale+rotate+material) 全通道"}]
+    },
+    {
+      "type": "tap",
+      "time": 39.0,
+      "face": "w",
+      "position": {"x": 0, "y": 0},
+      "glowing": true,
+      "tag": "color_group",
+      "events": {
+        "x": [
+          {"rtime": -3.0, "value": -3, "easing": "linear"},
+          {"rtime": -1.5, "value": 3, "easing": "cubicInOut"},
+          {"rtime": 0.0, "value": 0, "easing": "cubicInOut"}
+        ],
+        "y": [
+          {"rtime": -3.0, "value": 2, "easing": "linear"},
+          {"rtime": -1.5, "value": -2, "easing": "sineInOut"},
+          {"rtime": 0.0, "value": 0, "easing": "sineInOut"}
+        ],
+        "scale": [
+          {"rtime": -3.0, "value": 0.3, "easing": "linear"},
+          {"rtime": -1.0, "value": 1.8, "easing": "expoOut"},
+          {"rtime": 0.0, "value": 1.0, "easing": "quadIn"}
+        ],
+        "rotate": [
+          {"rtime": -3.0, "value": 0, "easing": "linear"},
+          {"rtime": 0.0, "value": 720, "easing": "cubicInOut"}
+        ],
+        "alpha": [
+          {"rtime": -3.0, "value": 0.2, "easing": "linear"},
+          {"rtime": -1.0, "value": 1.0, "easing": "quadOut"}
+        ],
+        "material": [
+          {"rtime": -3.0, "value": "DIAMOND_BLOCK"},
+          {"rtime": -2.0, "value": "GOLD_BLOCK"},
+          {"rtime": -1.0, "value": "EMERALD_BLOCK"},
+          {"rtime": -0.3, "value": "LIGHT_BLUE_CONCRETE"}
+        ]
+      }
+    },
+
+    {
+      "type": "execution",
+      "time": 40.5,
+      "actions": [{"type": "chat", "enabled": true, "message": "§c[Combined 7] §fDOUBLE音符 + inline事件 (z飞入+alpha淡入+scale)"}]
+    },
+    {
+      "type": "double",
+      "time": 42.5,
+      "face": "w",
+      "positions": [
+        {"x": -1, "y": 0},
+        {"x": 1, "y": 0}
+      ],
+      "glowing": false,
+      "tag": "",
+      "events": {
+        "z": [
+          {"rtime": -2.0, "value": 3, "easing": "linear"},
+          {"rtime": -0.5, "value": 0, "easing": "expoOut"}
+        ],
+        "alpha": [
+          {"rtime": -2.0, "value": 0, "easing": "linear"},
+          {"rtime": -1.5, "value": 1, "easing": "linear"}
+        ],
+        "scale": [
+          {"rtime": -2.0, "value": 0.5, "easing": "linear"},
+          {"rtime": -0.5, "value": 1.0, "easing": "backOut"}
+        ]
+      }
+    },
+
+    {
+      "type": "execution",
+      "time": 44.0,
+      "actions": [{"type": "chat", "enabled": true, "message": "§c[Combined 8] §fHOLD音符 + inline scale_x/scale_y非等比缩放"}]
+    },
+    {
+      "type": "tap",
+      "time": 46.0,
+      "face": "w",
+      "position": {"x": 0, "y": 0},
+      "glowing": false,
+      "tag": ""
+    },
+    {
+      "type": "hold",
+      "time": 46.01,
+      "face": "w",
+      "position": {"x": 0, "y": 0},
+      "glowing": false,
+      "tag": "",
+      "events": {
+        "scale_x": [
+          {"rtime": -2.0, "value": 1.0, "easing": "linear"},
+          {"rtime": -1.0, "value": 2.0, "easing": "backOut"},
+          {"rtime": 0.0, "value": 1.0, "easing": "quadIn"}
+        ],
+        "scale_y": [
+          {"rtime": -2.0, "value": 1.0, "easing": "linear"},
+          {"rtime": -1.0, "value": 0.5, "easing": "quadOut"},
+          {"rtime": 0.0, "value": 1.0, "easing": "quadIn"}
+        ]
+      }
+    },
+    {
+      "type": "hold",
+      "time": 46.11,
+      "face": "w",
+      "position": {"x": 0, "y": 0},
+      "glowing": false,
+      "tag": ""
+    },
+    {
+      "type": "hold",
+      "time": 46.21,
+      "face": "w",
+      "position": {"x": 0, "y": 0},
+      "glowing": false,
+      "tag": ""
+    },
+    {
+      "type": "hold",
+      "time": 46.31,
+      "face": "w",
+      "position": {"x": 0, "y": 0},
+      "glowing": false,
+      "tag": ""
+    },
+    {
+      "type": "hold",
+      "time": 46.41,
+      "face": "w",
+      "position": {"x": 0, "y": 0},
+      "glowing": false,
+      "tag": ""
+    },
+    {
+      "type": "hold",
+      "time": 46.51,
+      "face": "w",
+      "position": {"x": 0, "y": 0},
+      "glowing": false,
+      "tag": ""
+    },
+    {
+      "type": "hold",
+      "time": 46.61,
+      "face": "w",
+      "position": {"x": 0, "y": 0},
+      "glowing": false,
+      "tag": ""
+    },
+    {
+      "type": "hold",
+      "time": 46.71,
+      "face": "w",
+      "position": {"x": 0, "y": 0},
+      "glowing": false,
+      "tag": ""
+    },
+    {
+      "type": "hold",
+      "time": 46.81,
+      "face": "w",
+      "position": {"x": 0, "y": 0},
+      "glowing": false,
+      "tag": ""
+    },
+    {
+      "type": "hold",
+      "time": 46.91,
+      "face": "w",
+      "position": {"x": 0, "y": 0},
+      "glowing": false,
+      "tag": ""
+    },
+
+    {
+      "type": "execution",
+      "time": 48.0,
+      "actions": [{"type": "chat", "enabled": true, "message": "§c[Combined 9] §fFLICK音符 + inline scale+rotate"}]
+    },
+    {
+      "type": "flick",
+      "time": 50.0,
+      "face": "w",
+      "turn": "left",
+      "glowing": false,
+      "tag": "",
+      "events": {
+        "scale": [
+          {"rtime": -1.5, "value": 0.5, "easing": "linear"},
+          {"rtime": -0.5, "value": 1.3, "easing": "backOut"},
+          {"rtime": 0.0, "value": 1.0, "easing": "quadIn"}
+        ],
+        "rotate": [
+          {"rtime": -1.5, "value": -45, "easing": "linear"},
+          {"rtime": 0.0, "value": 0, "easing": "cubicOut"}
+        ]
+      }
+    },
+
+    {
+      "type": "execution",
+      "time": 51.5,
+      "actions": [{"type": "chat", "enabled": true, "message": "§a[Combined Test Complete] §f所有组合测试完毕"}]
+    }
+  ]
+}

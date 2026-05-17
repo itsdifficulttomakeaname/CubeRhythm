@@ -11,14 +11,14 @@ public class ScoreManager {
     private int missCount = 0;
     private int combo = 0;
     private int maxCombo = 0;
-    private int score = 0;
+    private double score = 0;
 
     private final int totalNotes;
-    private final int scorePerNote;
+    private final double scorePerNote;
 
     public ScoreManager(int totalNotes) {
         this.totalNotes = totalNotes;
-        this.scorePerNote = totalNotes > 0 ? 1000000 / totalNotes : 0;
+        this.scorePerNote = totalNotes > 0 ? (1_000_000.0 + totalNotes) / totalNotes : 0;
     }
 
     /**
@@ -31,12 +31,12 @@ public class ScoreManager {
             case EXACT -> {
                 exactCount++;
                 combo++;
-                score += (int) (scorePerNote * result.getScoreMultiplier());
+                score += scorePerNote * result.getScoreMultiplier();
             }
             case JUST -> {
                 justCount++;
                 combo++;
-                score += (int) (scorePerNote * result.getScoreMultiplier());
+                score += scorePerNote * result.getScoreMultiplier();
 
                 // Track early/late for JUST hits
                 if (timingOffset < 0) {

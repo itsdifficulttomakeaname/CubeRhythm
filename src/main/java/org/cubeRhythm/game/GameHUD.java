@@ -158,7 +158,7 @@ public class GameHUD {
             // Update score (top left, index 1)
             TextDisplay scoreDisplay = hudEntities.get(index++);
             Component scoreText = Component.text("Score\n", NamedTextColor.GRAY)
-                .append(Component.text(String.format("%,d", scoreManager.getScore()), NamedTextColor.WHITE));
+                .append(Component.text(String.format("%,.0f", scoreManager.getScore()), NamedTextColor.WHITE));
             scoreDisplay.text(scoreText);
 
             // Update combo (top right, index 2)

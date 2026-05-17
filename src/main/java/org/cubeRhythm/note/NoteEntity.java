@@ -5,6 +5,8 @@ import lombok.EqualsAndHashCode;
 import org.bukkit.entity.BlockDisplay;
 import org.bukkit.entity.Interaction;
 import org.bukkit.entity.TextDisplay;
+import org.cubeRhythm.note.event.Channel;
+import org.cubeRhythm.note.event.EventTrack;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,13 +36,11 @@ public class NoteEntity extends Note {
     // 用于 double 音符
     private NoteEntity linkedNote;
 
-    // easing_motion 状态
-    private double xOffset = 0;
-    private double yOffset = 0;
-    private Double easingStartTime = null;
-    private Double easingLambda = null;
-    private String easingType = null;
-    private double easingStartDistance = 0;
+    // 事件系统（数据层保留，运行时暂未启用）
+    private List<EventTrack> matchedTracks;
+    private int[] channelCursors = new int[Channel.COUNT];
+    private double cursorOffsetX = 0;
+    private double cursorOffsetY = 0;
 
     public NoteEntity(Note note) {
         this.setTime(note.getTime());
@@ -52,6 +52,7 @@ public class NoteEntity extends Note {
         this.setGlowing(note.isGlowing());
         this.setTag(note.getTag());
         this.setTurn(note.getTurn());
+        this.setEvents(note.getEvents());
         this.linkUUID = UUID.randomUUID();
     }
 

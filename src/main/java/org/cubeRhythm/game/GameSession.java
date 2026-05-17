@@ -13,6 +13,8 @@ import org.cubeRhythm.input.InputHandler;
 import org.cubeRhythm.judgment.JudgmentManager;
 import org.cubeRhythm.judgment.ScoreManager;
 import org.cubeRhythm.note.*;
+import org.cubeRhythm.note.event.EvalResult;
+import org.cubeRhythm.note.event.TrackEvaluator;
 
 import static org.cubeRhythm.Main.instance;
 
@@ -29,7 +31,7 @@ public class GameSession {
     private NoteSpawner noteSpawner;
     private InputHandler inputHandler;
     private GameHUD gameHUD;
-    private EasingMotionManager easingMotionManager;
+    private ResultScreen resultScreen;
 
     private WrappedTask gameLoop;
     private WrappedTask previewStopTask;
@@ -130,9 +132,6 @@ public class GameSession {
             centerZ
         );
 
-        easingMotionManager = new EasingMotionManager(entityManager);
-        noteSpawner.setEasingMotionManager(easingMotionManager);
-
         instance.getLogger().info("未生成音符数: " + noteSpawner.getUnspawnedCount());
 
         // 初始化输入处理器
@@ -188,32 +187,20 @@ public class GameSession {
         // 生成音符
         noteSpawner.update(currentTime);
 
-        // 更新 easing_motion
-        if (easingMotionManager != null) {
-            easingMotionManager.tick();
-            // 对刚激活 v 缓动（startTime == globalTick）的音符记录当前距离
-            for (org.cubeRhythm.note.NoteEntity e : entityManager.getAllEntities()) {
-                if (e.getEasingType() != null && e.getEasingStartTime() != null
-                        && e.getEasingStartTime() == globalTick && e.getEasingStartDistance() == 0) {
-                    double d = settings.getSpeed() * 20 * (e.getTime() + 1.0 - currentTime) + 4;
-                    e.setEasingStartDistance(d);
-                }
-            }
-        }
-
         // 更新所有音符位置（音符时间+1秒用于提前渲染，配合音乐延迟1秒播放）
         for (NoteEntity entity : entityManager.getAllEntities()) {
             double noteTime = entity.getTime();
-            double distance;
 
-            // v 缓动：用积分计算当前距离
-            if (entity.getEasingType() != null && entity.getEasingStartTime() != null) {
-                double tElapsed = globalTick - entity.getEasingStartTime();
-                double distanceTraveled = org.cubeRhythm.note.EasingMotionManager.integralSpeed(
-                    entity.getEasingType(), entity.getEasingLambda(), tElapsed);
-                distance = entity.getEasingStartDistance() - distanceTraveled;
-            } else {
-                distance = settings.getSpeed() * 20 * (noteTime + 1.0 - currentTime) + 3;
+            // 基础线性距离
+            double distance = settings.getSpeed() * 20 * (noteTime + 1.0 - currentTime) + 3;
+
+            // 事件系统求值
+            EvalResult evalResult = null;
+            if (entity.getMatchedTracks() != null) {
+                evalResult = TrackEvaluator.evaluate(entity, currentTime);
+                if (evalResult != null) {
+                    distance += evalResult.getZ();
+                }
             }
 
             NoteRenderer.updateNote(
@@ -224,7 +211,8 @@ public class GameSession {
                     centerZ,
                     settings.getSpeed(),
                     distance,
-                    chart.getMetadata().getBpm()
+                    chart.getMetadata().getBpm(),
+                    evalResult
             );
 
             // 自动判定逻辑（DRAG、HOLD 和 FLICK 音符）+ 自动演奏
@@ -376,8 +364,7 @@ public class GameSession {
                 // 自动移除超过判定线太远的音符
                 // 参考Skript: z location < 4 - speed*4
                 if (distance < (3.0 - settings.getSpeed() * 4.0)) {
-                    if (!entity.isHit()) {
-                        // Miss
+                    if (!entity.isHit() && !entity.getType().isFake()) {
                         scoreManager.recordJudgment(org.cubeRhythm.judgment.JudgmentResult.MISS);
                     }
                     entityManager.unregisterEntity(entity.getLinkUUID());
@@ -516,7 +503,7 @@ public class GameSession {
         org.cubeRhythm.input.SnowballManager.removeSnowballs(player);
 
         // 显示结果（使用新的ResultScreen系统）
-        ResultScreen resultScreen = new ResultScreen(player, chart, scoreManager, settings);
+        resultScreen = new ResultScreen(player, chart, scoreManager, settings);
         resultScreen.show();
     }
 

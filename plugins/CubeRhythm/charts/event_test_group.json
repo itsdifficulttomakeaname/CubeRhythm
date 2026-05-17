@@ -1,0 +1,463 @@
+{
+  "version": "1.0.0",
+  "metadata": {
+    "id": "event_test_group",
+    "title": "Event Test - GroupEvents",
+    "artist": "Test",
+    "charter": "Auto",
+    "difficulty": {
+      "name": "Test",
+      "level": 2,
+      "color": "#FFAA00"
+    },
+    "audio": "",
+    "duration": 55,
+    "offset": 0,
+    "bpm": 120
+  },
+  "groupEvents": [
+    {
+      "selector": {
+        "tag": "wave_x"
+      },
+      "events": {
+        "x": [
+          {"time": 3.0, "value": 0, "easing": "linear"},
+          {"time": 4.5, "value": 2, "easing": "sineInOut"},
+          {"time": 6.0, "value": -2, "easing": "sineInOut"},
+          {"time": 7.5, "value": 0, "easing": "sineInOut"}
+        ]
+      }
+    },
+
+    {
+      "selector": {
+        "tag": "pulse"
+      },
+      "events": {
+        "scale": [
+          {"time": 10.0, "value": 1.0, "easing": "linear"},
+          {"time": 11.0, "value": 1.8, "easing": "backOut"},
+          {"time": 12.0, "value": 1.0, "easing": "quadIn"},
+          {"time": 13.0, "value": 1.8, "easing": "backOut"},
+          {"time": 14.0, "value": 1.0, "easing": "quadIn"}
+        ]
+      }
+    },
+
+    {
+      "selector": {
+        "tag": "wave_y"
+      },
+      "events": {
+        "y": [
+          {"time": 16.0, "value": 0, "easing": "linear"},
+          {"time": 17.0, "value": 1.5, "easing": "sineOut"},
+          {"time": 18.0, "value": 0, "easing": "sineIn"},
+          {"time": 19.0, "value": -1.5, "easing": "sineOut"},
+          {"time": 20.0, "value": 0, "easing": "sineIn"}
+        ]
+      }
+    },
+
+    {
+      "selector": {
+        "tag": "spin_fade"
+      },
+      "events": {
+        "alpha": [
+          {"time": 22.0, "value": 0.3, "easing": "linear"},
+          {"time": 23.0, "value": 1.0, "easing": "cubicOut"},
+          {"time": 25.0, "value": 1.0, "easing": "linear"},
+          {"time": 26.0, "value": 0.3, "easing": "cubicIn"}
+        ],
+        "rotate": [
+          {"time": 22.0, "value": 0, "easing": "linear"},
+          {"time": 26.0, "value": 360, "easing": "linear"}
+        ]
+      }
+    },
+
+    {
+      "selector": {
+        "timeRange": [28.0, 34.0]
+      },
+      "events": {
+        "z": [
+          {"time": 28.0, "value": 0, "easing": "linear"},
+          {"time": 29.0, "value": -2, "easing": "quadOut"},
+          {"time": 30.0, "value": 0, "easing": "quadIn"},
+          {"time": 31.0, "value": -2, "easing": "quadOut"},
+          {"time": 32.0, "value": 0, "easing": "quadIn"},
+          {"time": 33.0, "value": -3, "easing": "expoOut"},
+          {"time": 34.0, "value": 0, "easing": "expoIn"}
+        ]
+      }
+    },
+
+    {
+      "selector": {
+        "tag": "rainbow"
+      },
+      "events": {
+        "color_r": [
+          {"time": 36.0, "value": 255, "easing": "linear"},
+          {"time": 37.0, "value": 255, "easing": "linear"},
+          {"time": 38.0, "value": 0, "easing": "linear"},
+          {"time": 39.0, "value": 0, "easing": "linear"},
+          {"time": 40.0, "value": 0, "easing": "linear"},
+          {"time": 41.0, "value": 255, "easing": "linear"}
+        ],
+        "color_g": [
+          {"time": 36.0, "value": 0, "easing": "linear"},
+          {"time": 37.0, "value": 255, "easing": "linear"},
+          {"time": 38.0, "value": 255, "easing": "linear"},
+          {"time": 39.0, "value": 255, "easing": "linear"},
+          {"time": 40.0, "value": 0, "easing": "linear"},
+          {"time": 41.0, "value": 0, "easing": "linear"}
+        ],
+        "color_b": [
+          {"time": 36.0, "value": 0, "easing": "linear"},
+          {"time": 37.0, "value": 0, "easing": "linear"},
+          {"time": 38.0, "value": 0, "easing": "linear"},
+          {"time": 39.0, "value": 255, "easing": "linear"},
+          {"time": 40.0, "value": 255, "easing": "linear"},
+          {"time": 41.0, "value": 255, "easing": "linear"}
+        ]
+      }
+    },
+
+    {
+      "selector": {
+        "type": "tap",
+        "tag": "overlap"
+      },
+      "events": {
+        "x": [
+          {"time": 44.0, "value": 0, "easing": "linear"},
+          {"time": 45.0, "value": 1, "easing": "sineInOut"},
+          {"time": 46.0, "value": 0, "easing": "sineInOut"}
+        ]
+      }
+    }
+  ],
+  "notes": [
+    {
+      "type": "execution",
+      "time": 1.0,
+      "actions": [{"type": "chat", "enabled": true, "message": "§6[Group 1] §ftag选择器 - wave_x标签全体X摆动"}]
+    },
+    {
+      "type": "tap",
+      "time": 4.0,
+      "face": "w",
+      "position": {"x": -1, "y": 0},
+      "glowing": false,
+      "tag": "wave_x"
+    },
+    {
+      "type": "tap",
+      "time": 5.0,
+      "face": "w",
+      "position": {"x": 0, "y": 0},
+      "glowing": false,
+      "tag": "wave_x"
+    },
+    {
+      "type": "tap",
+      "time": 6.0,
+      "face": "w",
+      "position": {"x": 1, "y": 0},
+      "glowing": false,
+      "tag": "wave_x"
+    },
+    {
+      "type": "tap",
+      "time": 7.0,
+      "face": "w",
+      "position": {"x": 0, "y": 1},
+      "glowing": false,
+      "tag": "wave_x"
+    },
+
+    {
+      "type": "execution",
+      "time": 8.5,
+      "actions": [{"type": "chat", "enabled": true, "message": "§6[Group 2] §ftag选择器 - pulse标签全体Scale脉冲"}]
+    },
+    {
+      "type": "tap",
+      "time": 11.0,
+      "face": "w",
+      "position": {"x": -1, "y": 0},
+      "glowing": false,
+      "tag": "pulse"
+    },
+    {
+      "type": "tap",
+      "time": 12.0,
+      "face": "w",
+      "position": {"x": 0, "y": 0},
+      "glowing": false,
+      "tag": "pulse"
+    },
+    {
+      "type": "tap",
+      "time": 13.0,
+      "face": "w",
+      "position": {"x": 1, "y": 0},
+      "glowing": false,
+      "tag": "pulse"
+    },
+
+    {
+      "type": "execution",
+      "time": 14.5,
+      "actions": [{"type": "chat", "enabled": true, "message": "§6[Group 3] §ftag选择器 - wave_y标签全体Y波浪"}]
+    },
+    {
+      "type": "tap",
+      "time": 16.5,
+      "face": "w",
+      "position": {"x": -2, "y": 0},
+      "glowing": false,
+      "tag": "wave_y"
+    },
+    {
+      "type": "tap",
+      "time": 17.0,
+      "face": "w",
+      "position": {"x": -1, "y": 0},
+      "glowing": false,
+      "tag": "wave_y"
+    },
+    {
+      "type": "tap",
+      "time": 17.5,
+      "face": "w",
+      "position": {"x": 0, "y": 0},
+      "glowing": false,
+      "tag": "wave_y"
+    },
+    {
+      "type": "tap",
+      "time": 18.0,
+      "face": "w",
+      "position": {"x": 1, "y": 0},
+      "glowing": false,
+      "tag": "wave_y"
+    },
+    {
+      "type": "tap",
+      "time": 18.5,
+      "face": "w",
+      "position": {"x": 2, "y": 0},
+      "glowing": false,
+      "tag": "wave_y"
+    },
+
+    {
+      "type": "execution",
+      "time": 20.5,
+      "actions": [{"type": "chat", "enabled": true, "message": "§6[Group 4] §ftag选择器 - spin_fade标签 alpha+rotate组合"}]
+    },
+    {
+      "type": "tap",
+      "time": 23.0,
+      "face": "w",
+      "position": {"x": -1, "y": 0},
+      "glowing": false,
+      "tag": "spin_fade"
+    },
+    {
+      "type": "tap",
+      "time": 23.5,
+      "face": "w",
+      "position": {"x": 0, "y": 0},
+      "glowing": false,
+      "tag": "spin_fade"
+    },
+    {
+      "type": "tap",
+      "time": 24.0,
+      "face": "w",
+      "position": {"x": 1, "y": 0},
+      "glowing": false,
+      "tag": "spin_fade"
+    },
+    {
+      "type": "tap",
+      "time": 24.5,
+      "face": "w",
+      "position": {"x": 0, "y": 1},
+      "glowing": false,
+      "tag": "spin_fade"
+    },
+    {
+      "type": "tap",
+      "time": 25.0,
+      "face": "w",
+      "position": {"x": 0, "y": -1},
+      "glowing": false,
+      "tag": "spin_fade"
+    },
+
+    {
+      "type": "execution",
+      "time": 26.5,
+      "actions": [{"type": "chat", "enabled": true, "message": "§6[Group 5] §ftimeRange选择器 - 28~34秒区间Z弹跳"}]
+    },
+    {
+      "type": "tap",
+      "time": 29.0,
+      "face": "w",
+      "position": {"x": -1, "y": 0},
+      "glowing": false,
+      "tag": ""
+    },
+    {
+      "type": "tap",
+      "time": 30.0,
+      "face": "w",
+      "position": {"x": 0, "y": 0},
+      "glowing": false,
+      "tag": ""
+    },
+    {
+      "type": "tap",
+      "time": 31.0,
+      "face": "w",
+      "position": {"x": 1, "y": 0},
+      "glowing": false,
+      "tag": ""
+    },
+    {
+      "type": "tap",
+      "time": 32.0,
+      "face": "w",
+      "position": {"x": 0, "y": 1},
+      "glowing": false,
+      "tag": ""
+    },
+    {
+      "type": "tap",
+      "time": 33.0,
+      "face": "w",
+      "position": {"x": 0, "y": -1},
+      "glowing": false,
+      "tag": ""
+    },
+
+    {
+      "type": "execution",
+      "time": 34.5,
+      "actions": [{"type": "chat", "enabled": true, "message": "§6[Group 6] §ftag选择器 - rainbow标签RGB彩虹 (需glowing)"}]
+    },
+    {
+      "type": "tap",
+      "time": 36.5,
+      "face": "w",
+      "position": {"x": -2, "y": 0},
+      "glowing": true,
+      "tag": "rainbow"
+    },
+    {
+      "type": "tap",
+      "time": 37.0,
+      "face": "w",
+      "position": {"x": -1, "y": 0},
+      "glowing": true,
+      "tag": "rainbow"
+    },
+    {
+      "type": "tap",
+      "time": 37.5,
+      "face": "w",
+      "position": {"x": 0, "y": 0},
+      "glowing": true,
+      "tag": "rainbow"
+    },
+    {
+      "type": "tap",
+      "time": 38.0,
+      "face": "w",
+      "position": {"x": 1, "y": 0},
+      "glowing": true,
+      "tag": "rainbow"
+    },
+    {
+      "type": "tap",
+      "time": 38.5,
+      "face": "w",
+      "position": {"x": 2, "y": 0},
+      "glowing": true,
+      "tag": "rainbow"
+    },
+    {
+      "type": "tap",
+      "time": 39.0,
+      "face": "w",
+      "position": {"x": 0, "y": 1},
+      "glowing": true,
+      "tag": "rainbow"
+    },
+    {
+      "type": "tap",
+      "time": 39.5,
+      "face": "w",
+      "position": {"x": 0, "y": -1},
+      "glowing": true,
+      "tag": "rainbow"
+    },
+    {
+      "type": "tap",
+      "time": 40.0,
+      "face": "w",
+      "position": {"x": 1, "y": 1},
+      "glowing": true,
+      "tag": "rainbow"
+    },
+
+    {
+      "type": "execution",
+      "time": 41.5,
+      "actions": [{"type": "chat", "enabled": true, "message": "§6[Group 7] §f多条件选择器 - type=tap + tag=overlap 组合"}]
+    },
+    {
+      "type": "tap",
+      "time": 44.5,
+      "face": "w",
+      "position": {"x": 0, "y": 0},
+      "glowing": false,
+      "tag": "overlap"
+    },
+    {
+      "type": "tap",
+      "time": 45.0,
+      "face": "w",
+      "position": {"x": 0, "y": 1},
+      "glowing": false,
+      "tag": "overlap"
+    },
+    {
+      "type": "tap",
+      "time": 45.5,
+      "face": "w",
+      "position": {"x": 0, "y": -1},
+      "glowing": false,
+      "tag": "overlap",
+      "events": {
+        "y": [
+          {"rtime": -1.5, "value": 1, "easing": "linear"},
+          {"rtime": 0.0, "value": 0, "easing": "quadOut"}
+        ]
+      }
+    },
+
+    {
+      "type": "execution",
+      "time": 47.0,
+      "actions": [{"type": "chat", "enabled": true, "message": "§a[Group Test Complete] §f所有groupEvents选择器测试完毕"}]
+    }
+  ]
+}
